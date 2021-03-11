@@ -6,9 +6,9 @@
  * @param link (link to next image)
  */
 class SpyChat{
-    constructor (identifier, url, image, messages, link){
+    constructor (identifier, room_url, image, messages, link){
         this.identifier = identifier;
-        this.url = url;
+        this.room_url = room_url;
         this.image = image;
         this.messages = messages;
         this.link = link;
@@ -33,16 +33,17 @@ class Message{
 /**
  * Creates spy chat data structure for local storage
  * @param identifier
- * @param url
+ * @param room_url
  * @param image
  * @param link
  * @returns {SpyChat}
  */
-function newSpyChat(identifier, url, image, link){
+function newSpyChat(identifier,roomNo, url, image, link){
     let messages = [];
+    let room_url = roomNo + url;
     return new SpyChat(
         identifier,
-        url,
+        room_url,
         image,
         messages,
         link);
