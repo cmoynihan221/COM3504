@@ -62,8 +62,13 @@ function sendChatText() {
 function connectToRoom() {
     roomNo = document.getElementById('roomNo').value;
     name = document.getElementById('name').value;
-    let imageUrl= document.getElementById('image_url').value;
+    //let imageUrl= document.getElementById('image_url').value;
+    let filename =document.getElementById('image_url') .files[0].name;
     if (!name) name = 'Unknown-' + Math.random();
+
+
+    let imageUrl = '/images/'+filename;
+    console.log("Image path ", imageUrl)
     socket.emit('create or join', roomNo, name);
     initCanvas(socket, imageUrl);
     hideLoginInterface(roomNo, name);
