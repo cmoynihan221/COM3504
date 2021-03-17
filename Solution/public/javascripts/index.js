@@ -12,9 +12,14 @@ function init() {
     // it sets up the interface so that userId and room are selected
     document.getElementById('initial_form').style.display = 'block';
     document.getElementById('chat_interface').style.display = 'none';
-
+    checkMedia();
     initSocket();
+}function initMedia() {
+
+    checkMedia();
+
 }
+
 
 /**
  * called to generate a random room number
