@@ -39,8 +39,11 @@ function initCanvas(sckt, imageUrl) {
                 drawOnCanvas(ctx, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness);
                 // @todo if you draw on the canvas, you may want to let everyone know via socket.io (socket.emit...)  by sending them
                 // room, userId, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness
+                socket.emit('draw', room, userId, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness);
             }
         }
+
+        initSocket();
     });
 
     // this is code left in case you need to  provide a button clearing the canvas (it is suggested that you implement it)
@@ -57,6 +60,13 @@ function initCanvas(sckt, imageUrl) {
     // and then you call
     //     let ctx = canvas[0].getContext('2d');
     //     drawOnCanvas(ctx, canvasWidth, canvasHeight, x1, y21, x2, y2, color, thickness)
+    function initSocket() {
+        // called when an annotation is received
+        socket.on('draw', function (room, userId, canvasWidth, canvasHeight, x1, y1, x2, y2, color, thickness) {
+            let ctx = canvas[0].getContext('2d');
+            drawOnCanvas(ctx, canvasWidth, canvasHeight, x1, y1, x2, y2, color, thickness)
+        });
+    }
 
     // this is called when the src of the image is loaded
     // this is an async operation as it may take time
