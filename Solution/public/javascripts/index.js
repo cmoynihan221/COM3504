@@ -14,11 +14,9 @@ function init() {
     document.getElementById('chat_interface').style.display = 'none';
     checkMedia();
     initSocket();
-}function initMedia() {
-
-    checkMedia();
-
 }
+
+
 
 
 /**
