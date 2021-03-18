@@ -70,7 +70,7 @@ self.addEventListener('activate', function (e) {
  * all the other pages are searched for in the cache. If not found, they are returned
  */
 self.addEventListener('fetch', function (e) {
-    console.log('[Service Worker] FetchAAAA', e.request.url);
+    console.log('[Service Worker] Fetch', e.request.url);
     /*
      * The app is asking for app shell files. In this scenario the app uses the
      * "Cache, falling back to the network" offline strategy:
@@ -87,7 +87,8 @@ self.addEventListener('fetch', function (e) {
                         if (!response.ok ||  response.statusCode>299) {
                             console.log("error: " + response.error());
                         } else {
-                            caches.add(response.clone());
+                            // COMMENTING below line fixes bug, look into this further
+                            //caches.add(response.clone());
                             return response;
                         }
                     })
