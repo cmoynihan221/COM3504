@@ -20,7 +20,7 @@ function initCanvas(sckt, imageUrl) {
     let img = document.getElementById('image');
     let ctx = cvx.getContext('2d');
     img.src = imageUrl;
-
+    console.log(imageUrl)
     // event on the canvas when the mouse is on it
     canvas.on('mousemove mousedown mouseup mouseout', function (e) {
         prevX = currX;
@@ -60,6 +60,7 @@ function initCanvas(sckt, imageUrl) {
     // and then you call
     //     let ctx = canvas[0].getContext('2d');
     //     drawOnCanvas(ctx, canvasWidth, canvasHeight, x1, y21, x2, y2, color, thickness)
+
     function initSocket() {
         // called when an annotation is received
         socket.on('draw', function (room, userId, canvasWidth, canvasHeight, x1, y1, x2, y2, color, thickness) {
@@ -68,6 +69,7 @@ function initCanvas(sckt, imageUrl) {
         });
     }
 
+    console.log("started")
     // this is called when the src of the image is loaded
     // this is an async operation as it may take time
     img.addEventListener('load', () => {
@@ -81,9 +83,9 @@ function initCanvas(sckt, imageUrl) {
                 let ratioY=1;
                 // if the screen is smaller than the img size we have to reduce the image to fit
                 if (img.clientWidth>window.innerWidth)
-                    ratioX=window.innerWidth/img.clientWidth;
+                    ratioX=window.innerWidth/(img.clientWidth);
                 if (img.clientHeight> window.innerHeight)
-                    ratioY= img.clientHeight/window.innerHeight;
+                    ratioY= img.clientHeight/(window.innerHeight);
                 let ratio= Math.min(ratioX, ratioY);
                 // resize the canvas to fit the screen and the image
                 cvx.width = canvas.width = img.clientWidth*ratio;

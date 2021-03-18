@@ -5,4 +5,7 @@ var router = express.Router();
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Image Browsing' });
 });
+router.get('/media', function(req, res, next) {
+  res.render('mediaCapture', { title: 'Media Capture' });
+});
 module.exports = router;

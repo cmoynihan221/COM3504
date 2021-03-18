@@ -12,9 +12,14 @@ function init() {
     // it sets up the interface so that userId and room are selected
     document.getElementById('initial_form').style.display = 'block';
     document.getElementById('chat_interface').style.display = 'none';
-
+    checkMedia();
     initSocket();
+}function initMedia() {
+
+    checkMedia();
+
 }
+
 
 /**
  * called to generate a random room number
@@ -62,8 +67,13 @@ function sendChatText() {
 function connectToRoom() {
     roomNo = document.getElementById('roomNo').value;
     name = document.getElementById('name').value;
-    let imageUrl= document.getElementById('image_url').value;
+    //let imageUrl= document.getElementById('image_url').value;
+    let filename =document.getElementById('image_url') .files[0].name;
     if (!name) name = 'Unknown-' + Math.random();
+
+
+    let imageUrl = '/images/'+filename;
+    console.log("Image path ", imageUrl)
     socket.emit('create or join', roomNo, name);
     initCanvas(socket, imageUrl);
     hideLoginInterface(roomNo, name);
