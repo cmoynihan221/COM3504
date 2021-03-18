@@ -22,13 +22,6 @@ function init() {
     initSocket();
 }
 
-function initMedia() {
-
-    checkMedia();
-
-}
-
-
 /**
  * called to generate a random room number
  * This is a simplification. A real world implementation would ask the server to generate a unique room number
