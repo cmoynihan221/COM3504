@@ -11,7 +11,7 @@ function hasGetUserMedia() {
 let localMediaStream= null;
 let ctx = null;
 let video = null;
-let canvas = null;
+let mediaCanvas = null;
 
 function checkMedia(){
     if (hasGetUserMedia()) {
@@ -19,8 +19,8 @@ function checkMedia(){
             video: { width: { exact: 300 }, height: { exact: 150 }, audio: false },
         };
         video = document.querySelector("video");
-        canvas = document.querySelector('canvas');
-        ctx = canvas.getContext('2d');
+        mediaCanvas = document.querySelector('canvas');
+        ctx = mediaCanvas.getContext('2d');
 
         video.addEventListener('click',snapshot,false);
         navigator.mediaDevices
@@ -48,7 +48,7 @@ function snapshot(){
 
         ctx.drawImage(video,0,0);
         document.querySelector('img').src
-        = canvas.toDataURL('image/png');
+        = mediaCanvas.toDataURL('image/png');
         changeDisplay('prephoto', 'none');
         changeDisplay('postphoto', 'block');
     }

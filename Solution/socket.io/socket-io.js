@@ -14,7 +14,6 @@ exports.init = function(io) {
         io.to(room).emit('chat', room, userId, chatText);
       });
 
-      // if work maybe split into channels, like the chat:news example
       socket.on('draw', function (room, userId, canvasWidth, canvasHeight, x1, y1, x2, y2, color, thickness) {
         io.to(room).emit('draw', room, userId, canvasWidth, canvasHeight, x1, y1, x2, y2, color, thickness);
       });

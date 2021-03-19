@@ -13,6 +13,8 @@ let color = 'red', thickness = 4;
  */
 function initCanvas(sckt, imageUrl) {
     socket = sckt;
+    room = document.getElementById('roomNo').value;
+    userId = document.getElementById('name').value;
     let flag = false,
         prevX, prevY, currX, currY = 0;
     let canvas = $('#canvas');
@@ -37,13 +39,10 @@ function initCanvas(sckt, imageUrl) {
         if (e.type === 'mousemove') {
             if (flag) {
                 drawOnCanvas(ctx, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness);
-                // @todo if you draw on the canvas, you may want to let everyone know via socket.io (socket.emit...)  by sending them
-                // room, userId, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness
                 socket.emit('draw', room, userId, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness);
             }
         }
 
-        initSocket();
     });
 
     // this is code left in case you need to  provide a button clearing the canvas (it is suggested that you implement it)
@@ -55,19 +54,11 @@ function initCanvas(sckt, imageUrl) {
 
     });
 
-    // @todo here you want to capture the event on the socket when someone else is drawing on their canvas (socket.on...)
-    // I suggest that you receive userId, canvasWidth, canvasHeight, x1, y21, x2, y2, color, thickness
-    // and then you call
-    //     let ctx = canvas[0].getContext('2d');
-    //     drawOnCanvas(ctx, canvasWidth, canvasHeight, x1, y21, x2, y2, color, thickness)
-
-    function initSocket() {
-        // called when an annotation is received
-        socket.on('draw', function (room, userId, canvasWidth, canvasHeight, x1, y1, x2, y2, color, thickness) {
-            let ctx = canvas[0].getContext('2d');
-            drawOnCanvas(ctx, canvasWidth, canvasHeight, x1, y1, x2, y2, color, thickness)
-        });
-    }
+    // called when an annotation is received
+    socket.on('draw', function (room, userId, canvasWidth, canvasHeight, x1, y1, x2, y2, color, thickness) {
+        let ctx = canvas[0].getContext('2d');
+        drawOnCanvas(ctx, canvasWidth, canvasHeight, x1, y1, x2, y2, color, thickness);
+    });
 
     console.log("started")
     // this is called when the src of the image is loaded

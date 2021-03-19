@@ -15,11 +15,11 @@ function init() {
     initSocket();
     //checkMedia();
 
-    if ('serviceWorker' in navigator) {
+    /*if ('serviceWorker' in navigator) {
         navigator.serviceWorker
             .register('./service-worker.js')
             .then(function() { console.log('Service Worker Registered'); });
-    }
+    }*/
 }
 
 /**
@@ -49,7 +49,6 @@ function initSocket() {
         if (userId === name) who = 'Me';
         writeOnHistory('<b>' + who + ':</b> ' + chatText);
     });
-
 }
 
 /**
