@@ -5,7 +5,9 @@ body {
 a {
   color: #00B7FF;
 }
-
+body{
+    background-repeat: no-repeat;
+}
 .boxed {
   width: 100%;
   padding:10px;
