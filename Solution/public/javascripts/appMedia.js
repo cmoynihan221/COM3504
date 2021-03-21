@@ -26,14 +26,12 @@ function hasGetUserMedia() {
     return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
 }
 
-<<<<<<< Updated upstream:Solution/public/javascripts/appMedia.js
 let localMediaStream= null;
 let ctx = null;
 let video = null;
 let mediaCanvas = null;
-=======
+
 function checkAndSetMedia(){
->>>>>>> Stashed changes:Solution/public/javascripts/app.js
 
     videoSelect = document.getElementById('videoSource');
     if (hasGetUserMedia()) {
@@ -52,15 +50,10 @@ function checkAndSetMedia(){
         video.addEventListener('click',snapshot,false);
         navigator.mediaDevices
             .getUserMedia(constraints)
-<<<<<<< Updated upstream:Solution/public/javascripts/appMedia.js
             .then((stream)=>gotStream(stream),
-            );
-=======
+            )
             .then((stream)=>gotStream(stream),)
             .catch(handleError);
-
-
->>>>>>> Stashed changes:Solution/public/javascripts/app.js
 
     } else {
         alert("This feature is not supported by your browser");
@@ -112,8 +105,6 @@ export function changeDisplay(className, style){
         items.item(i).style.display = style;
     }
 }
-
-
 
 
 function getSources(sourcesInfos){
