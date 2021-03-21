@@ -51,16 +51,22 @@ function snapshot(){
         = mediaCanvas.toDataURL('image/png');
         changeDisplay('prephoto', 'none');
         changeDisplay('postphoto', 'block');
+        changeDisplay('usephoto', 'none');
     }
 }
 function save(){
+    changeDisplay('usephoto', 'block');
     alert("Photo Saved!");
+}
+function sendphoto(){
+    console.log(document.querySelector('img').src)
 }
 function retake(){
     changeDisplay('prephoto', 'block');
     changeDisplay('postphoto', 'none');
+    changeDisplay('usephoto', 'none');
 }
-function changeDisplay(className, style){
+export function changeDisplay(className, style){
     let items = document.getElementsByClassName(className);
     for (let i =0;i < items.length;i++){
         items.item(i).style.display = style;
