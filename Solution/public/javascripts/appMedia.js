@@ -4,6 +4,7 @@ let ctx = null;
 let video = null;
 let canvas = null;
 let videoSelect;
+let mediaCanvas = null;
 
 function mediaOnLoad(){
     if(hasGetUserMedia()){
@@ -20,27 +21,25 @@ function initMedia() {
     document.getElementById('start').style.display = 'none';
     document.getElementById('change').style.display = 'block';
     changeDisplay('prephoto', 'block');
+
     checkAndSetMedia();
 }
 function hasGetUserMedia() {
     return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
 }
 
-let localMediaStream= null;
-let ctx = null;
-let video = null;
-let mediaCanvas = null;
+
+
 
 function checkAndSetMedia(){
-
+    console.log("check and set media") ;
     videoSelect = document.getElementById('videoSource');
     if (hasGetUserMedia()) {
-
         const constraints = {
             video: { sourceId: videoSelect.value,
                 facingMode: videoSelect.value,
-                width: { exact: 300 },
-                height: { exact: 150 },
+                width: { exact: 600 },
+                height: { exact: 300 },
                 audio: false },
         };
         video = document.querySelector("video");
@@ -50,11 +49,8 @@ function checkAndSetMedia(){
         video.addEventListener('click',snapshot,false);
         navigator.mediaDevices
             .getUserMedia(constraints)
-            .then((stream)=>gotStream(stream),
-            )
-            .then((stream)=>gotStream(stream),)
-            .catch(handleError);
-
+            .then((stream)=>gotStream(stream))
+            .catch(error => handleError())
     } else {
         alert("This feature is not supported by your browser");
     }
@@ -68,7 +64,7 @@ function changeMedia(){
 }
 
 function gotStream(stream){
-    //navigator.mediaDevices.enumerateDevices().then(initAudioVideo);
+
     let mediaElement = document.querySelector('video');
     mediaElement.srcObject = stream;
     localMediaStream = stream;
@@ -76,9 +72,9 @@ function gotStream(stream){
 
 function snapshot(){
     video = document.querySelector("video");
-    alert(video.videoHeight);
-    if (localMediaStream){
 
+    if (localMediaStream){
+        //TODO set capture are to correct size
         ctx.drawImage(video,0,0,video.videoWidth,video.videoHeight);
         document.querySelector('img').src
         = mediaCanvas.toDataURL('image/png');
@@ -99,7 +95,7 @@ function retake(){
     changeDisplay('postphoto', 'none');
     changeDisplay('usephoto', 'none');
 }
-export function changeDisplay(className, style){
+function changeDisplay(className, style){
     let items = document.getElementsByClassName(className);
     for (let i =0;i < items.length;i++){
         items.item(i).style.display = style;
