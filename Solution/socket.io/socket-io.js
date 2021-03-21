@@ -18,6 +18,10 @@ exports.init = function(io) {
         io.to(room).emit('draw', room, userId, canvasWidth, canvasHeight, x1, y1, x2, y2, color, thickness);
       });
 
+      socket.on('clear canvas', function (room, userId, canvasWidth, canvasHeight) {
+        io.to(room).emit('clear canvas', room ,userId, canvasWidth, canvasHeight);
+      });
+
       socket.on('disconnect', function(){
         console.log('someone disconnected');
       });

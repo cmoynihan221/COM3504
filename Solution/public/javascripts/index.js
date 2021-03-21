@@ -1,8 +1,14 @@
+//const {changeDisplay} = require("./app");
 let name = null;
 let roomNo = null;
 let socket = io.connect();
 
-
+function changeDisplay(className, style){
+    let items = document.getElementsByClassName(className);
+    for (let i =0;i < items.length;i++){
+        items.item(i).style.display = style;
+    }
+}
 /**
  * called by <body onload>
  * it initialises the interface and the expected socket messages
@@ -22,11 +28,34 @@ function init() {
         console.log('Browser does not support IndexedDB');
     }
 
-    /*if ('serviceWorker' in navigator) {
+    if ('serviceWorker' in navigator) {
         navigator.serviceWorker
             .register('./service-worker.js')
             .then(function() { console.log('Service Worker Registered'); });
-    }*/
+    }
+}
+
+function checkConnection(){
+    console.log("here")
+
+    changeDisplay("offline", "none")
+    //window.addEventListener("load", () => {
+        //hasNetwork(navigator.onLine);
+        window.addEventListener("online", () => {
+            // Set hasNetwork to online when they change to online.
+            //hasNetwork(true);
+            changeDisplay("online", "block")
+            changeDisplay("offline", "none")
+            console.log("online")
+        });
+        window.addEventListener("offline", () => {
+            // Set hasNetwork to offline when they change to offline.
+            //hasNetwork(false);
+            changeDisplay("online", "none")
+            changeDisplay("offline", "block")
+            console.log("offline")
+        });
+    //});
 }
 
 /**

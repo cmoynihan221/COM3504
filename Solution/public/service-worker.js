@@ -22,6 +22,7 @@ var filesToCache = [
     '/javascripts/index.js',
     '/javascripts/spychatDataStructure.js',
     '/stylesheets/style.css',
+    '/stylesheets/navigation.css',
     '/../socket.io/socket.io.js',
 ];
 
@@ -88,8 +89,12 @@ self.addEventListener('fetch', function (e) {
                         if (!response.ok ||  response.statusCode>299) {
                             console.log("error: " + response.error());
                         } else {
-                            // COMMENTING below line fixes bug, look into this further
-                            //caches.add(response.clone());
+                            try {
+                                caches.add(response.clone());
+                            } catch (error) {
+                                console.log(error);
+                            }
+
                             return response;
                         }
                     })

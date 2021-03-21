@@ -28,6 +28,9 @@
             <button id="roomNoGenerator" onclick="generateRoom()">Generate Room</button>
         </p>
         <p style=" width: 100%"><label for="image_url"> Image (URL) </label><input type="file"  id="image_url" name="image_url"></p>
+        <p>
+            <a href="/media">Take photo</a>
+        </p>
         <button id="connect" onclick="connectToRoom()">Connect</button>
     </form>
 
@@ -40,6 +43,7 @@
     <div style="width: 100%; height: 50vh">
             <img id="image" height="100%" >
             <canvas  id="canvas" ></canvas>
+            <button id="canvas_clear" class="canvas-clear">Clear Canvas</button>
     </div>
 <!--    </div>-->
     <div id="history" style="height: 35vh" class="boxed scrolling" ></div>
