@@ -16,7 +16,7 @@ var dataCacheName = 'spyChatData';
 var cacheName = 'spyChat';
 var filesToCache = [
     '/',
-    '/javascripts/app.js',
+    '/javascripts/appMedia.js',
     '/javascripts/canvas.js',
     '/javascripts/database.js',
     '/javascripts/index.js',

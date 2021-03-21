@@ -13,7 +13,14 @@ function init() {
     document.getElementById('initial_form').style.display = 'block';
     document.getElementById('chat_interface').style.display = 'none';
     initSocket();
-    //checkMedia();
+    if('indexedDB' in window){
+        initDatabase()
+            .catch(e => {
+                console.log('Database init error')
+            })
+    }else{
+        console.log('Browser does not support IndexedDB');
+    }
 
     /*if ('serviceWorker' in navigator) {
         navigator.serviceWorker

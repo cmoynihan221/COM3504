@@ -1,4 +1,4 @@
-import * as idb from 'idb';
+import * as idb from './idb/index.js';
 let db;
 
 const SPYCHAT_DB_NAME = 'db_spychat_1';
@@ -18,10 +18,11 @@ async function initDatabase(){
                         autoIncrement: true
                     });
                     forecastDB.createIndex('room_url', 'room_url', {unique: true});
+                }else{
+                    console.log("error on create obj store");
                 }
             }
         });
-        console.log("db create");
     }
 }
 window.initDatabase = initDatabase;

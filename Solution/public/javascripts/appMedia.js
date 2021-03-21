@@ -26,7 +26,6 @@ function checkMedia(){
         navigator.mediaDevices
             .getUserMedia(constraints)
             .then((stream)=>gotStream(stream),
-
             );
 
     } else {
