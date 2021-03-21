@@ -2,7 +2,7 @@
 let localMediaStream= null;
 let ctx = null;
 let video = null;
-let canvas = null;
+
 let videoSelect;
 let mediaCanvas = null;
 
