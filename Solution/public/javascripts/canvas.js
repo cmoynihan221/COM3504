@@ -47,17 +47,22 @@ function initCanvas(sckt, imageUrl) {
 
     // this is code left in case you need to  provide a button clearing the canvas (it is suggested that you implement it)
     $('.canvas-clear').on('click', function (e) {
-        let c_width = canvas.width();
-        let c_height = canvas.height();
+        let c_width = canvas.width;
+        let c_height = canvas.height;
         ctx.clearRect(0, 0, c_width, c_height);
-        // @todo if you clear the canvas, you want to let everyone know via socket.io (socket.emit...)
-
+        socket.emit('clear canvas', room, userId, c_width, c_height);
     });
 
     // called when an annotation is received
     socket.on('draw', function (room, userId, canvasWidth, canvasHeight, x1, y1, x2, y2, color, thickness) {
         let ctx = canvas[0].getContext('2d');
         drawOnCanvas(ctx, canvasWidth, canvasHeight, x1, y1, x2, y2, color, thickness);
+    });
+
+    socket.on('clear canvas', function (room, userId, c_width, c_height) {
+        let ctx = canvas[0].getContext('2d');
+        ctx.clearRect(0,0, c_width, c_height);
+        writeOnHistory('<b>' + userId + '</b> cleared the canvas. ');
     });
 
     console.log("started")

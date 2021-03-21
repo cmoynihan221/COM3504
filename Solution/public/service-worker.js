@@ -22,7 +22,9 @@ var filesToCache = [
     '/javascripts/index.js',
     '/javascripts/spychatDataStructure.js',
     '/stylesheets/style.css',
+    '/stylesheets/navigation.css',
     '/../socket.io/socket.io.js',
+    '/images/',
 ];
 
 /**
