@@ -3,6 +3,7 @@ let db;
 
 const SPYCHAT_DB_NAME = 'db_spychat_1';
 const SPYCHAT_STORE_NAME = 'store_spychat';
+const IMAGE_STORE = 'image_store';
 
 /**
  *Creates the database with index on room_url
@@ -40,16 +41,15 @@ async function storeDataInCache(room_url, spyChat) {
     if (db) {
         try{
             let tx = await db.transaction(SPYCHAT_STORE_NAME, 'readwrite');
-            let store = await tx.objectStore(SPYCHAT_STORE_NAME);
-            await store.put(spyChat);
+           //let store = await tx.objectStore(SPYCHAT_STORE_NAME);
+            await tx.store.put(spyChat);
             await  tx.done;
             console.log('added item to the store! '+ JSON.stringify(spyChat));
         } catch(error) {
-            //@TODO remove the localStorage methods
-            localStorage.setItem(room_url, JSON.stringify(spyChat));
+            console.log(error);
+
         };
     }
-    else localStorage.setItem(room_url, JSON.stringify(spyChat));
 }
 window.storeDataInCache= storeDataInCache;
 
@@ -68,7 +68,7 @@ async function getCachedData(room_url) {
             let tx = await db.transaction(SPYCHAT_STORE_NAME, 'readonly');
             let store = await tx.objectStore(SPYCHAT_STORE_NAME);
             let index = await store.index('room_url');
-            let past_chat = await index.getAll(IDBKeyRange.only(room_url));
+            let past_chat = await index.get(IDBKeyRange.only(room_url));
             await tx.done;
             if (past_chat){
                 return past_chat;
@@ -84,3 +84,4 @@ async function getCachedData(room_url) {
     }
 }
 window.getCachedData= getCachedData;
+

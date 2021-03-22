@@ -1,0 +1,47 @@
+#trial{
+    position:absolute;
+    background: linear-gradient(59deg, rgba(33,36,36,1) 31%, rgba(162,168,171,1) 47%, rgba(15,16,17,1) 64%);
+}
+#center{
+    position:relative;
+    top:10%;
+}
+.welcome{
+    font-size:100px;
+}
+.box1,
+.box2,
+.box3{
+    width: 25%;
+    vertical-align: top;
+    display: inline-block;
+}
+.box2{
+    width: 50%;
+    vertical-align: top;
+    display: inline-block;
+}
+#button {
+    width: 23%;
+    display: inline-block;
+}
+#input{
+    width: 74%;
+    display: inline-block;
+}
+@media screen and (max-width: 850px) {
+    .box1,
+    .box3{
+        width: 10%;
+        vertical-align: top;
+        display: inline-block;
+    }
+    .box2{
+        width: 80%;
+        vertical-align: top;
+        display: inline-block;
+    }
+    .welcome{
+        font-size:50px;
+    }
+}
