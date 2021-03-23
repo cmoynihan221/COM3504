@@ -11,7 +11,7 @@ let color = 'red', thickness = 4;
  * @param sckt the open socket to register events on
  * @param imageUrl teh image url to download
  */
-function initCanvas(sckt, imageUrl) {
+function initCanvas(sckt, imageUrl, data) {
     socket = sckt;
     room = document.getElementById('roomNo').value;
     userId = document.getElementById('name').value;
@@ -21,6 +21,7 @@ function initCanvas(sckt, imageUrl) {
     let cvx = document.getElementById('canvas');
     let img = document.getElementById('image');
     let ctx = cvx.getContext('2d');
+    data.addCanvas(cvx.toDataURL());
     img.src = imageUrl;
     console.log(imageUrl)
     // event on the canvas when the mouse is on it
@@ -39,6 +40,8 @@ function initCanvas(sckt, imageUrl) {
         if (e.type === 'mousemove') {
             if (flag) {
                 drawOnCanvas(ctx, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness);
+                data.updateCanvas(cvx.toDataURL());
+
                 socket.emit('draw', room, userId, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness);
             }
         }
@@ -47,17 +50,24 @@ function initCanvas(sckt, imageUrl) {
 
     // this is code left in case you need to  provide a button clearing the canvas (it is suggested that you implement it)
     $('.canvas-clear').on('click', function (e) {
-        let c_width = canvas.width();
-        let c_height = canvas.height();
+        let c_width = canvas.width;
+        let c_height = canvas.height;
         ctx.clearRect(0, 0, c_width, c_height);
-        // @todo if you clear the canvas, you want to let everyone know via socket.io (socket.emit...)
-
+        socket.emit('clear canvas', room, userId, c_width, c_height);
     });
 
     // called when an annotation is received
     socket.on('draw', function (room, userId, canvasWidth, canvasHeight, x1, y1, x2, y2, color, thickness) {
         let ctx = canvas[0].getContext('2d');
-        drawOnCanvas(ctx, canvasWidth, canvasHeight, x1, y1, x2, y2, color, thickness);
+        drawOnCanvas(ctx, canvasWidth, canvasHeight, x1, y1, x2, y2, color, thickness,);
+        data.updateCanvas(cvx.toDataURL());
+    });
+
+    socket.on('clear canvas', function (room, userId, c_width, c_height) {
+        let ctx = canvas[0].getContext('2d');
+        ctx.clearRect(0,0, c_width, c_height);
+        data.updateCanvas(cvx.toDataURL());
+        writeOnHistory('<b>' + userId + '</b> cleared the canvas. ');
     });
 
     console.log("started")
@@ -85,6 +95,7 @@ function initCanvas(sckt, imageUrl) {
                 drawImageScaled(img, cvx, ctx);
                 // hide the image element as it is not needed
                 img.style.display = 'none';
+                data.updateCanvas(cvx.toDataURL());
             }
         }, 10);
     });
@@ -92,7 +103,7 @@ function initCanvas(sckt, imageUrl) {
 
 /**
  * called when it is required to draw the image on the canvas. We have resized the canvas to the same image size
- * so ti is simpler to draw later
+ * so it is simpler to draw later
  * @param img
  * @param canvas
  * @param ctx
@@ -140,4 +151,5 @@ function drawOnCanvas(ctx, canvasWidth, canvasHeight, prevX, prevY, currX, currY
     ctx.lineWidth = thickness;
     ctx.stroke();
     ctx.closePath();
+
 }

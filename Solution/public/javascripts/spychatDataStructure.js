@@ -1,21 +1,33 @@
 /**
- * @param identifier (how to find image offline)
- * @param url (url of image)
- * @param image (image + drawings)
- * @param messages (array of messages)
- * @param link (link to next image)
+ * @param identifier (how to find image offline, imagerURL+roomNo)
+ * @param image (image)
+ * @param canvas drawings
  */
 class SpyChat{
-    constructor (identifier, room_url, image, messages, link){
-        this.identifier = identifier;
-        this.room_url = room_url;
+    constructor (image, roomNo){
+        this.room_url =roomNo+image;
         this.image = image;
-        this.messages = messages;
-        this.link = link;
+        this.messages = new Array();
+        this.link = null ;
+        this.canvas = null;
     }
     addMessage(message){
         this.messages.push(message);
     }
+    addCanvas(canvas){
+        this.canvas = canvas;
+    }
+    updateCanvas(canvas){
+        this.canvas = canvas;
+    }
+    addLink(link){
+        this.link = link;
+    }
+    getID() {
+        return this.room_url;
+    }
+
+
 }
 
 /**
@@ -24,39 +36,12 @@ class SpyChat{
  * @constructor
  */
 class Message{
-    constructor (user, text){
-        this.user = user;
+    constructor ( text){
         this.text = text;
     }
 }
 
-/**
- * Creates spy chat data structure for local storage
- * @param identifier
- * @param room_url
- * @param image
- * @param link
- * @returns {SpyChat}
- */
-function newSpyChat(identifier,roomNo, url, image, link){
-    let messages = [];
-    let room_url = roomNo + url;
-    return new SpyChat(
-        identifier,
-        room_url,
-        image,
-        messages,
-        link);
-}
 
-/**
- * Adds a message and the user who typed it to a spychat
- * @param spyChat
- * @param user
- * @param message
- */
-function addMessage(spyChat, user, message){
-    spyChat.addMessage(new Message(
-        user,
-        message));
-}
+
+
+

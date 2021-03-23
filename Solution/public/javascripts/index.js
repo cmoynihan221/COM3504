@@ -19,13 +19,20 @@ function init() {
     document.getElementById('initial_form').style.display = 'block';
     document.getElementById('chat_interface').style.display = 'none';
     initSocket();
-    //checkMedia();
+    if('indexedDB' in window){
+        initDatabase()
+            .catch(e => {
+                console.log('Database init error')
+            })
+    }else{
+        console.log('Browser does not support IndexedDB');
+    }
 
-    /*if ('serviceWorker' in navigator) {
-        navigator.serviceWorker
-            .register('./service-worker.js')
-            .then(function() { console.log('Service Worker Registered'); });
-    }*/
+    if ('serviceWorker' in navigator) {
+        //navigator.serviceWorker
+         //   .register('./service-worker.js')
+         //   .then(function() { console.log('Service Worker Registered'); });
+    }
 }
 
 function checkConnection(){
@@ -93,19 +100,20 @@ function sendChatText() {
  * used to connect to a room. It gets the user name and room number from the
  * interface
  */
+let data = null;
 function connectToRoom() {
     roomNo = document.getElementById('roomNo').value;
     name = document.getElementById('name').value;
     //let imageUrl= document.getElementById('image_url').value;
     let filename =document.getElementById('image_url') .files[0].name;
     if (!name) name = 'Unknown-' + Math.random();
-
-
     let imageUrl = '/images/'+filename;
     console.log("Image path ", imageUrl)
     socket.emit('create or join', roomNo, name);
-    initCanvas(socket, imageUrl);
+    data = new SpyChat(imageUrl,roomNo);
+    initCanvas(socket, imageUrl, data);
     hideLoginInterface(roomNo, name);
+
 }
 
 /**
@@ -122,6 +130,7 @@ function writeOnHistory(text) {
     // scroll to the last element
     history.scrollTop = history.scrollHeight;
     document.getElementById('chat_input').value = '';
+    data.addMessage( text);
 }
 
 /**
@@ -135,4 +144,15 @@ function hideLoginInterface(room, userId) {
     document.getElementById('who_you_are').innerHTML= userId;
     document.getElementById('in_room').innerHTML= ' '+room;
 }
+window.onbeforeunload = async function saveData(){
+    if(data){
+        alert("Saving data");
+        let roomurl = data.getID();
+        storeDataInCache(roomurl,data)
+            .then(value => alert("dataSaved"))
+            .catch(e=>handleError())}
+}
+
+
+
 
