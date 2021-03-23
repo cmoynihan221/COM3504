@@ -66,7 +66,7 @@ function retake(){
     changeDisplay('postphoto', 'none');
     changeDisplay('usephoto', 'none');
 }
-export function changeDisplay(className, style){
+function changeDisplay(className, style){
     let items = document.getElementsByClassName(className);
     for (let i =0;i < items.length;i++){
         items.item(i).style.display = style;
