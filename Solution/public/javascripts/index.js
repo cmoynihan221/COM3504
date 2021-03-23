@@ -28,11 +28,11 @@ function init() {
         console.log('Browser does not support IndexedDB');
     }
 
-    if ('serviceWorker' in navigator) {
-        //navigator.serviceWorker
-         //   .register('./service-worker.js')
-         //   .then(function() { console.log('Service Worker Registered'); });
-    }
+    /*if ('serviceWorker' in navigator) {
+        navigator.serviceWorker
+            .register('./service-worker.js')
+            .then(function() { console.log('Service Worker Registered'); });
+    }*/
 }
 
 function checkConnection(){

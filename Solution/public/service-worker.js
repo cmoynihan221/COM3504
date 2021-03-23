@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-var dataCacheName = 'spyChatData';
-var cacheName = 'spyChat';
-var filesToCache = [
+let cache = null;
+let dataCacheName = 'spyChatData';
+let cacheName = 'spyChat';
+let filesToCache = [
     '/',
     '/javascripts/appMedia.js',
     '/javascripts/canvas.js',
@@ -32,8 +33,9 @@ var filesToCache = [
 self.addEventListener('install', function (e) {
     console.log('[ServiceWorker] Install');
     e.waitUntil(
-        caches.open(cacheName).then(function (cache) {
+        caches.open(cacheName).then(function (cacheX) {
             console.log('[ServiceWorker] Caching app shell');
+            cache= cacheX;
             return cache.addAll(filesToCache);
         })
     );
@@ -89,12 +91,7 @@ self.addEventListener('fetch', function (e) {
                         if (!response.ok ||  response.statusCode>299) {
                             console.log("error: " + response.error());
                         } else {
-                            try {
-                                caches.add(response.clone());
-                            } catch (error) {
-                                console.log(error);
-                            }
-
+                            cache.add(e.request.url);
                             return response;
                         }
                     })
