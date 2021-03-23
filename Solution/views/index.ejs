@@ -12,8 +12,10 @@
     <script src="/javascripts/app.js"></script>
     <link rel='stylesheet' href='/stylesheets/navigation.css'/>
 </head>
-<body onload="init()"class="h-100 " >
-<div id="initial_form" class="h-100"style="display: block" >
+<body onload="init()" >
+<div id="initial_form" class="h-100 trial text-white text-center"style="display: block;width: 100%" >
+    <div id="center">
+
     <h1><%= title %></h1>
     <p>Please insert the id of the Room you want to Join, if you do not have a room id, click Generate Room</p>
 
@@ -33,8 +35,9 @@
         <button id="connect" onclick="connectToRoom()">Connect</button>
     </form>
 
+    </div>
 </div>
-<div id="chat_interface" style="display: none">
+<div id="chat_interface" class="h-100 trial text-white " style="display: none; width:100%">
     <div>
     <p><div id="who_you_are" style="display: inline" style="height: 10vh"></div>, you are in room: <div id="in_room" style="display: inline"></div>
     </div>
