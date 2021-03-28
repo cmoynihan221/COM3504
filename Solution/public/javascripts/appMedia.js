@@ -82,18 +82,36 @@ function snapshot(){
         changeDisplay('postphoto', 'block');
         changeDisplay('usephoto', 'none');
     }
+
 }
 function save(){
-    changeDisplay('usephoto', 'block');
+    //change first parameter to userID once users db is made
+    saveImage(0, mediaCanvas.toDataURL());
+    console.log(mediaCanvas.toDataURL());
+    //changeDisplay('usephoto', 'block');
     alert("Photo Saved!");
 }
-function sendphoto(){
-    console.log(document.querySelector('img').src)
+function saveImage(userID, imageBlob){
+    let data = {userId: userId, imageBlob: imageBlob};
+    $.ajax({
+        dataType: "json",
+        url: '/uploadpicture_app',
+        type: "POST",
+        data: data,
+        success: function (data) {
+            token = data.token;
+            // go to next picture taking
+            location.reload();
+        },
+        error: function (err) {
+            alert('Error: ' + err.status + ':' + err.statusText);
+        }
+    });
 }
 function retake(){
     changeDisplay('prephoto', 'block');
     changeDisplay('postphoto', 'none');
-    changeDisplay('usephoto', 'none');
+    //changeDisplay('usephoto', 'none');
 }
 function changeDisplay(className, style){
     let items = document.getElementsByClassName(className);
