@@ -92,16 +92,18 @@ function save(){
     alert("Photo Saved!");
 }
 function saveImage(userID, imageBlob){
-    let data = {userId: userId, imageBlob: imageBlob};
+    //console.log()
+    let data = {userId: userID, imageBlob: imageBlob};
     $.ajax({
         dataType: "json",
-        url: '/uploadpicture_app',
+        url: '/save_image',
         type: "POST",
         data: data,
         success: function (data) {
             token = data.token;
             // go to next picture taking
             location.reload();
+            console.log("SAVED IMAGE!!");
         },
         error: function (err) {
             alert('Error: ' + err.status + ':' + err.statusText);
