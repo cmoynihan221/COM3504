@@ -8,6 +8,7 @@ router.get('/chats', function(req, res, next) {
 });
 
 router.post('/save_image',image.saveImage);
+router.get('/allImages',image.renderImages);
 
 router.get('/', function(req, res, next) {
   res.render('navigation', { title: 'Splash Screen' });
