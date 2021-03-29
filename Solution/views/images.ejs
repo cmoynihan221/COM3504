@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Images</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+
+    <script src="/javascripts/index.js"></script>
+    <link rel='stylesheet' href='/stylesheets/navigation.css'/>
+</head>
+
+<body onload="checkConnection()">
+<div class="container-fluid h-100" id="trial">
+    <div id="center">
+        <div class="row ">
+            <div class="col-4 text-center text-white" >
+
+
+                <h1 class="welcome">Uploaded images</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md">
+                <% images.forEach(function(image){ %>
+                    <img src="<%= image.file_path.replace("./public","") %>"></img>
+                <% })%>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>
