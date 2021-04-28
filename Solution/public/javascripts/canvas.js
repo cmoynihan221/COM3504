@@ -38,13 +38,16 @@ function initCanvas(sckt, imageUrl, data,offline) {
             flag = true;
         }
         if (e.type === 'mouseup' || e.type === 'mouseout') {
+            if(flag == true){
+                console.log("MouseUp Save");
+                data.updateCanvas(cvx.toDataURL());
+            }
             flag = false;
         }
         // if the flag is up, the movement of the mouse draws on the canvas
         if (e.type === 'mousemove') {
             if (flag) {
                 drawOnCanvas(ctx, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness);
-                data.updateCanvas(cvx.toDataURL());
                 if(!offline){
                 socket.emit('draw', room, userId, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness);}
             }
@@ -52,13 +55,19 @@ function initCanvas(sckt, imageUrl, data,offline) {
 
     });
 
+
     // this is code left in case you need to  provide a button clearing the canvas (it is suggested that you implement it)
     $('.canvas-clear').on('click', function (e) {
-        img.style.display = 'block';
-        reDrawCanvas(img, ctx, cvx, canvas);
-        data.updateCanvas(cvx.toDataURL());
+
+
         if(!offline){
-        socket.emit('clear canvas', room, userId);}
+            socket.emit('clear canvas', room, userId);}
+        else{
+            img.style.display = 'block';
+            reDrawCanvas(img, ctx, cvx, canvas);
+            console.log("clear Save");
+            data.updateCanvas(cvx.toDataURL());
+        }
     });
 
     // called when an annotation is received
@@ -66,12 +75,12 @@ function initCanvas(sckt, imageUrl, data,offline) {
     socket.on('draw', function (room, userId, canvasWidth, canvasHeight, x1, y1, x2, y2, color, thickness) {
         let ctx = canvas[0].getContext('2d');
         drawOnCanvas(ctx, canvasWidth, canvasHeight, x1, y1, x2, y2, color, thickness,);
-
     });}
     if(!offline){
     socket.on('clear canvas', function (room, userId) {
         img.style.display = 'block';
         reDrawCanvas(img, ctx, cvx, canvas);
+        console.log("clear socket Save");
         data.updateCanvas(cvx.toDataURL());
         writeOnHistory('<b>' + userId + '</b> cleared the canvas. ');
     });}
@@ -86,6 +95,8 @@ function initCanvas(sckt, imageUrl, data,offline) {
             if (img.naturalHeight) {
                 clearInterval(poll);
                 reDrawCanvas(img, ctx, cvx, canvas);
+                console.log("load image save");
+                data.updateCanvas(cvx.toDataURL());
             }
         }, 10);
     });
@@ -108,7 +119,7 @@ function reDrawCanvas(img, ctx, cvx, canvas){
     drawImageScaled(img, cvx, ctx);
     // hide the image element as it is not needed
     img.style.display = 'none';
-    data.updateCanvas(cvx.toDataURL());
+
 
 }
 /**
