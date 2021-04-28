@@ -1,6 +1,52 @@
 import * as idb from './idb/index.js';
 let db;
 
+/*
+* @param identifier (how to find image offline, imagerURL+roomNo)
+* @param image (image)
+* @param canvas drawings
+*/
+class SpyChat{
+    constructor (image, roomNo){
+        this.room_url =roomNo+image;
+        this.image = image;
+        this.messages = new Array();
+        this.link = null ;
+        this.canvas = null;
+
+    }
+    storeData(){
+        storeDataInCache(this.room_url,this)
+            .then(t=>console.log("Successfully stored"))
+            .catch(e=>console.log("Error saving data:"+e.message))
+    }
+    addMessage(message){
+        this.messages.push(message);
+        updateData(this.room_url, this)
+            .then(t=>console.log("Successfully Saved message"))
+            .catch(e=>console.log("Error saving message:"+e.message))
+    }
+    updateCanvas(canvas){
+        this.canvas = canvas;
+        updateData(this.room_url, this)
+            .then(t=>console.log("Successfully Saved canvas"))
+            .catch(e=>console.log("Error saving canvas:"+e.message))
+    }
+    addLink(link){
+        this.link = link;
+        updateData(this.room_url, this)
+            .then(t=>console.log("Successfully Saved link"))
+            .catch(e=>console.log("Error saving link:"+e.message))
+    }
+
+}
+window.SpyChat = SpyChat;
+
+
+
+
+
+
 const SPYCHAT_DB_NAME = 'db_spychat_1';
 const SPYCHAT_STORE_NAME = 'store_spychat';
 const IMAGE_STORE = 'image_store';
@@ -15,7 +61,6 @@ async function initDatabase(){
             upgrade(upgradeDb, oldVersion, newVersion) {
                 if (!upgradeDb.objectStoreNames.contains(SPYCHAT_STORE_NAME)) {
                     let forecastDB = upgradeDb.createObjectStore(SPYCHAT_STORE_NAME, {
-                        keyPath: 'id',
                         autoIncrement: true
                     });
                     forecastDB.createIndex('room_url', 'room_url', {unique: true});
@@ -24,6 +69,7 @@ async function initDatabase(){
                 }
             }
         });
+
     }
 }
 window.initDatabase = initDatabase;
@@ -34,21 +80,28 @@ window.initDatabase = initDatabase;
  * @param spyChat the spy chat object
  * @returns {Promise<void>}
  */
-async function storeDataInCache(room_url, spyChat) {
-    console.log('inserting: '+JSON.stringify(spyChat));
+async function storeDataInCache(room_url,spyChat) {
+    console.log('inserting: '+room_url);
     if (!db)
         await initDatabase();
     if (db) {
-        try{
-            let tx = await db.transaction(SPYCHAT_STORE_NAME, 'readwrite');
-           //let store = await tx.objectStore(SPYCHAT_STORE_NAME);
-            await tx.store.put(spyChat);
-            await  tx.done;
-            console.log('added item to the store! '+ JSON.stringify(spyChat));
-        } catch(error) {
-            console.log(error);
+        let tx = await db.transaction(SPYCHAT_STORE_NAME, 'readwrite');
+        await tx.store.add(spyChat);
+        await  tx.done;
 
-        };
+    }
+}
+window.storeDataInCache= storeDataInCache;
+
+async function updateData(room_url, data) {
+    console.log('updating: '+ room_url);
+    if (!db)
+        await initDatabase();
+    if (db) {
+        let tx = await db.transaction(SPYCHAT_STORE_NAME, 'readwrite');
+        let key = await tx.store.index('room_url').getKey(room_url);
+        await tx.store.put(JSON.stringify(data),key);
+        await  tx.done;
     }
 }
 window.storeDataInCache= storeDataInCache;
@@ -58,17 +111,17 @@ window.storeDataInCache= storeDataInCache;
  * @param room_url room number + url of photo
  * @returns {Promise<*>} the chat object
  */
-async function getCachedData(room_url) {
+async function getCachedData() {
     if (!db)
         await initDatabase();
     if (db) {
         try {
             //Possibly needs to be edited to make offline
-            console.log('fetching: ' + room_url);
+            console.log('fetching data ');
             let tx = await db.transaction(SPYCHAT_STORE_NAME, 'readonly');
             let store = await tx.objectStore(SPYCHAT_STORE_NAME);
             let index = await store.index('room_url');
-            let past_chat = await index.get(IDBKeyRange.only(room_url));
+            let past_chat = await index.getAll();
             await tx.done;
             if (past_chat){
                 return past_chat;

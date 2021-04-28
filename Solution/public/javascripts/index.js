@@ -1,4 +1,4 @@
-//const {changeDisplay} = require("./app");
+
 let name = null;
 let roomNo = null;
 let socket = io.connect();
@@ -16,9 +16,12 @@ function changeDisplay(className, style){
  */
 function init() {
     // it sets up the interface so that userId and room are selected
+
+    //document.getElementById('chat-section').load('chatSection.ejs');
+
+    initSocket();
     document.getElementById('initial_form').style.display = 'block';
     document.getElementById('chat_interface').style.display = 'none';
-    initSocket();
     if('indexedDB' in window){
         initDatabase()
             .catch(e => {
@@ -101,6 +104,9 @@ function sendChatText() {
  * interface
  */
 let data = null;
+
+
+
 function connectToRoom() {
     roomNo = document.getElementById('roomNo').value;
     name = document.getElementById('name').value;
@@ -108,11 +114,13 @@ function connectToRoom() {
     let filename =document.getElementById('image_url') .files[0].name;
     if (!name) name = 'Unknown-' + Math.random();
     let imageUrl = '/images/'+filename;
-    console.log("Image path ", imageUrl)
+    //console.log("Image path ", imageUrl)
     socket.emit('create or join', roomNo, name);
     data = new SpyChat(imageUrl,roomNo);
-    initCanvas(socket, imageUrl, data);
+    initCanvas(socket, imageUrl, data, false);
+    data.storeData();
     hideLoginInterface(roomNo, name);
+
 
 }
 
@@ -130,7 +138,7 @@ function writeOnHistory(text) {
     // scroll to the last element
     history.scrollTop = history.scrollHeight;
     document.getElementById('chat_input').value = '';
-    data.addMessage( text);
+    data.addMessage(text);
 }
 
 /**
@@ -144,14 +152,14 @@ function hideLoginInterface(room, userId) {
     document.getElementById('who_you_are').innerHTML= userId;
     document.getElementById('in_room').innerHTML= ' '+room;
 }
-window.onbeforeunload = async function saveData(){
+/*
+window.onbeforeunload =  function saveData(){
     if(data){
-        alert("Saving data");
         let roomurl = data.getID();
         storeDataInCache(roomurl,data)
-            .then(value => alert("dataSaved"))
+            .then(value => alert("Data Saved"))
             .catch(e=>handleError())}
-}
+}*/
 
 
 
