@@ -38,12 +38,14 @@ function checkAndSetMedia(){
         const constraints = {
             video: { sourceId: videoSelect.value,
                 facingMode: videoSelect.value,
-                width: { exact: 600 },
+               width: { exact: 600 },
                 height: { exact: 300 },
                 audio: false },
         };
         video = document.querySelector("video");
         mediaCanvas = document.querySelector('canvas');
+        mediaCanvas.height = video.videoHeight
+        mediaCanvas.width = video.videoWidth
         ctx = mediaCanvas.getContext('2d');
 
         video.addEventListener('click',snapshot,false);
@@ -72,10 +74,12 @@ function gotStream(stream){
 
 function snapshot(){
     video = document.querySelector("video");
-
+    //video = document.get
     if (localMediaStream){
+        mediaCanvas.height = video.videoHeight
+        mediaCanvas.width = video.videoWidth
         //TODO set capture are to correct size
-        ctx.drawImage(video,0,0,video.videoWidth,video.videoHeight);
+        ctx.drawImage(video,0,0)
         document.querySelector('img').src
         = mediaCanvas.toDataURL('image/png');
         changeDisplay('prephoto', 'none');
