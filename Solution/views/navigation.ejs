@@ -11,6 +11,17 @@
 <body onload="checkConnection()">
     <div class="container-fluid h-100" id="trial">
         <div id="center">
+        <div id="login">
+        <div class="row text-white">
+            <form onsubmit="return false;">
+                <p><label for="name"> Your name </label>
+                    <input type="text" id="name" name="name">
+                </p>
+                <button id="login" onclick="loginToSplashScreen()">Login</button>
+            </form>
+        </div>
+        </div>
+        <div id="splash_screen" style="display:none">
         <div class="row ">
             <div class="col text-center text-white" >
                 <h1 class="welcome">Welcome<br/> Secret Agent</h1>
@@ -52,6 +63,7 @@
                 </div>
             </div>
 
+        </div>
         </div>
         </div>
     </div>

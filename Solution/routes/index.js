@@ -11,7 +11,7 @@ router.post('/save_image',image.saveImage);
 router.get('/allImages',image.renderImages);
 
 router.get('/', function(req, res, next) {
-  res.render('navigation', { title: 'Splash Screen' });
+  res.render('navigation', { title: 'Login' });
 });
 router.get('/searchChats', function(req, res, next) {
   res.render('searchChats', { title: 'Search Chats' });
