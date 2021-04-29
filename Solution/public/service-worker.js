@@ -17,13 +17,18 @@ let dataCacheName = 'spyChatData';
 let cacheName = 'spyChat';
 let filesToCache = [
     '/',
+    '/chats',
+    '/javascripts/idb/index.js',
+    '/javascripts/idb/wrap-idb-value.js',
+    '/javascripts/app.js',
     '/javascripts/appMedia.js',
     '/javascripts/canvas.js',
     '/javascripts/database.js',
     '/javascripts/index.js',
-    '/javascripts/spychatDataStructure.js',
-    '/stylesheets/style.css',
+    '/javascripts/searchChats.js',
     '/stylesheets/navigation.css',
+    '/stylesheets/searchPage.css',
+    '/stylesheets/style.css',
     '/../socket.io/socket.io.js',
 ];
 
@@ -75,29 +80,29 @@ self.addEventListener('activate', function (e) {
  */
 self.addEventListener('fetch', function (e) {
     console.log('[Service Worker] Fetch', e.request.url);
-    /*
-     * The app is asking for app shell files. In this scenario the app uses the
-     * "Cache, falling back to the network" offline strategy:
-     * https://jakearchibald.com/2014/offline-cookbook/#cache-falling-back-to-network
-     */
-    e.respondWith(
-        caches.match(e.request).then(function (response) {
-            return response
-                || fetch(e.request)
-                    .then(function (response) {
-                        // note if network error happens, fetch does not return
-                        // an error. it just returns response not ok
-                        // https://www.tjvantoll.com/2015/09/13/fetch-and-errors/
-                        if (!response.ok ||  response.statusCode>299) {
-                            console.log("error: " + response.error());
-                        } else {
-                            cache.add(e.request.url);
-                            return response;
-                        }
-                    })
-                    .catch(function (err) {
-                        console.log("error: " + err);
-                    })
-        })
-    );
+        /*
+         * The app is asking for app shell files. In this scenario the app uses the
+         * "Cache, falling back to the network" offline strategy:
+         * https://jakearchibald.com/2014/offline-cookbook/#cache-falling-back-to-network
+         */
+        e.respondWith(
+            caches.match(e.request).then(function (response) {
+                return response
+                    || fetch(e.request)
+                        .then(function (response) {
+                            // note if network error happens, fetch does not return
+                            // an error. it just returns response not ok
+                            // https://www.tjvantoll.com/2015/09/13/fetch-and-errors/
+                            if (!response.ok || response.statusCode > 299) {
+                                console.log("error: " + response.error());
+                            } else {
+                                //cache.add(e.request.url);
+                                return response;
+                            }
+                        })
+                        .catch(function (err) {
+                            console.log("error: " + err);
+                        })
+            })
+        );
 });

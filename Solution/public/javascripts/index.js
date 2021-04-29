@@ -1,5 +1,5 @@
 
-let name = null;
+let name;
 let roomNo = null;
 let socket = io.connect();
 
@@ -39,7 +39,21 @@ function init() {
 }
 
 function checkConnection(){
+    if (!name) {
+        document.getElementById('splash_screen').style.display = 'none';
+        document.getElementById('login').style.display = 'block';
+    } else {
+        document.getElementById('splash_screen').style.display = 'block';
+        document.getElementById('login').style.display = 'none';
+    }
+
     console.log("here")
+
+    /*if ('serviceWorker' in navigator) {
+        navigator.serviceWorker
+            .register('./service-worker.js')
+            .then(function() { console.log('Service Worker Registered'); });
+    }*/
 
     changeDisplay("offline", "none")
     //window.addEventListener("load", () => {
@@ -107,12 +121,22 @@ let data = null;
 
 
 
+function loginToSplashScreen() {
+    name = document.getElementById('name').value;
+    if (!name) name = 'Unknown-' + Math.random();
+    localStorage.setItem('name', name);
+
+    document.getElementById('login').style.display = 'none';
+    document.getElementById('splash_screen').style.display = 'block';
+}
+
 function connectToRoom() {
     roomNo = document.getElementById('roomNo').value;
-    name = document.getElementById('name').value;
+    name = localStorage.getItem('name');
+    //name = document.getElementById('name').value;
     //let imageUrl= document.getElementById('image_url').value;
     let filename =document.getElementById('image_url') .files[0].name;
-    if (!name) name = 'Unknown-' + Math.random();
+    //if (!name) name = 'Unknown-' + Math.random();
     let imageUrl = '/images/'+filename;
     //console.log("Image path ", imageUrl)
     socket.emit('create or join', roomNo, name);
@@ -120,8 +144,6 @@ function connectToRoom() {
     initCanvas(socket, imageUrl, data, false);
     data.storeData();
     hideLoginInterface(roomNo, name);
-
-
 }
 
 /**

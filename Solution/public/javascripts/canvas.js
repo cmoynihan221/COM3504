@@ -15,7 +15,7 @@ function initCanvas(sckt, imageUrl, data,offline) {
     if(!offline){
         socket = sckt;
         room = document.getElementById('roomNo').value;
-        userId = document.getElementById('name').value;
+        userId = localStorage.getItem('name');
     }
 
 
