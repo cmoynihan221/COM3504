@@ -4,10 +4,11 @@ exports.saveImage = function(req, res, next){
     //drop the images db
     /*Image.remove({}, function(err) {
           console.log('collection removed')
-    });*/
+    });
+    */
         let userId = req.body.userId;
         let currentTime = new Date().getTime();
-        let directory = './public/images/' + userId + '/';
+        let directory = 'public/images/' + userId + '/';
         if(!fs.existsSync(directory)){
             try {
                 fs.mkdirSync(directory,  { recursive: true });
@@ -51,6 +52,7 @@ exports.saveImage = function(req, res, next){
 exports.renderImages = function(req, res, next){
     //find all images and send in the list of the filepaths as json to the receiving page
     //render the images on the receiving page
+
     try {
         Image.find(
             function (err, images) {
@@ -62,7 +64,8 @@ exports.renderImages = function(req, res, next){
                 //res.setHeader('Content-Type', 'application/json');
                 //res.send(JSON.stringify(images));
 
-            }).then(results =>res.render('images', { images: results }));
+            })
+            .then(results =>res.render('images', { images: results }));
     } catch (e) {
         res.status(500).send('error '+ e);
     }
