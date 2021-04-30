@@ -109,7 +109,7 @@ function initSocket() {
  * and sends the message via  socket
  */
 function sendChatText() {
-    let chatText = document.getElementById('chat_input').value;
+    let chatText = document.getElementById('chat_input').value
     socket.emit('chat', roomNo, name, chatText);
 }
 

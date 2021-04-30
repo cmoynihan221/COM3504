@@ -39,7 +39,6 @@ function initCanvas(sckt, imageUrl, data,offline) {
         }
         if (e.type === 'mouseup' || e.type === 'mouseout') {
             if(flag == true){
-                console.log("MouseUp Save");
                 data.updateCanvas(cvx.toDataURL());
             }
             flag = false;
@@ -65,7 +64,6 @@ function initCanvas(sckt, imageUrl, data,offline) {
         else{
             img.style.display = 'block';
             reDrawCanvas(img, ctx, cvx, canvas);
-            console.log("clear Save");
             data.updateCanvas(cvx.toDataURL());
         }
     });
@@ -80,7 +78,6 @@ function initCanvas(sckt, imageUrl, data,offline) {
     socket.on('clear canvas', function (room, userId) {
         img.style.display = 'block';
         reDrawCanvas(img, ctx, cvx, canvas);
-        console.log("clear socket Save");
         data.updateCanvas(cvx.toDataURL());
         writeOnHistory('<b>' + userId + '</b> cleared the canvas. ');
     });}
@@ -95,7 +92,6 @@ function initCanvas(sckt, imageUrl, data,offline) {
             if (img.naturalHeight) {
                 clearInterval(poll);
                 reDrawCanvas(img, ctx, cvx, canvas);
-                console.log("load image save");
                 data.updateCanvas(cvx.toDataURL());
             }
         }, 10);

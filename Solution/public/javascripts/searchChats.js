@@ -30,11 +30,16 @@ function setTarget(data,i){
     document.getElementById('who_you_are').innerHTML= 'user';
     document.getElementById('in_room').innerHTML= ' '+'local';
     console.log("click");
-    let dataStruc = new SpyChat(data[i].canvas,'offline' );
-    //let imageUrl= document.getElementById('image_url').value;
-    let imageUrl = data[i].canvas;
-    console.log(imageUrl);
-    let socket = null;
-    initCanvas(socket, imageUrl, dataStruc, true);
 
+    let dataStruct = new SpyChat(data[i].canvas,'offline' );
+    dataStruct.image = data[i].canvas;
+
+    let socket = null;
+    initCanvas(socket, dataStruct.image, dataStruct, true);
+
+}
+
+function textChatOffline() {
+    let chatText = document.getElementById('chat_input').value
+    writeOnHistory(chatText);
 }

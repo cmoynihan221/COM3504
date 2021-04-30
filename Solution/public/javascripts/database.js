@@ -32,6 +32,7 @@ class SpyChat{
             .then(t=>console.log("Successfully Saved canvas"))
             .catch(e=>console.log("Error saving canvas:"+e.message))
     }
+
     addLink(link){
         this.link = link;
         updateData(this.room_url, this)
@@ -93,6 +94,7 @@ async function storeDataInCache(room_url,spyChat) {
 }
 window.storeDataInCache= storeDataInCache;
 
+
 async function updateData(room_url, data) {
     console.log('updating: '+ room_url);
     if (!db)
@@ -100,8 +102,12 @@ async function updateData(room_url, data) {
     if (db) {
         let tx = await db.transaction(SPYCHAT_STORE_NAME, 'readwrite');
         let key = await tx.store.index('room_url').getKey(room_url);
-        await tx.store.put(JSON.stringify(data),key);
-        await  tx.done;
+        if(!(key == undefined)){
+            await tx.store.put(data,key);
+            await  tx.done;
+        }
+
+
     }
 }
 window.storeDataInCache= storeDataInCache;
