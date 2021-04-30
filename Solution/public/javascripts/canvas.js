@@ -57,8 +57,6 @@ function initCanvas(sckt, imageUrl, data,offline) {
 
     // this is code left in case you need to  provide a button clearing the canvas (it is suggested that you implement it)
     $('.canvas-clear').on('click', function (e) {
-
-
         if(!offline){
             socket.emit('clear canvas', room, userId);}
         else{
@@ -86,12 +84,14 @@ function initCanvas(sckt, imageUrl, data,offline) {
     // this is called when the src of the image is loaded
     // this is an async operation as it may take time
     img.addEventListener('load', () => {
+        console.log("img loaded");
         // it takes time before the image size is computed and made available
         // here we wait until the height is set, then we resize the canvas based on the size of the image
         let poll = setInterval(function () {
             if (img.naturalHeight) {
                 clearInterval(poll);
                 reDrawCanvas(img, ctx, cvx, canvas);
+
                 data.updateCanvas(cvx.toDataURL());
             }
         }, 10);

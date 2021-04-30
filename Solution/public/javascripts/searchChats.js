@@ -1,4 +1,4 @@
-
+let dataStruct;
 function initFind(){
     document.getElementById('chat_interface').style.display = 'none';
     console.log(document.getElementById("image"));
@@ -21,25 +21,26 @@ function found(data){
         a.onclick = function(){setTarget(data, i);return false;}
         cell1.appendChild(a);
     }
-
-
 }
 function setTarget(data,i){
+    dataStruct = new SpyChat(data[i]);
+    name = localStorage.getItem('name');
     document.getElementById('search').style.display = 'none';
     document.getElementById('chat_interface').style.display = 'block';
-    document.getElementById('who_you_are').innerHTML= 'user';
-    document.getElementById('in_room').innerHTML= ' '+'local';
-    console.log("click");
-
-    let dataStruct = new SpyChat(data[i].canvas,'offline' );
-    dataStruct.image = data[i].canvas;
+    document.getElementById('who_you_are').innerHTML= name;
+    document.getElementById('in_room').innerHTML= ' ' +dataStruct.room_url+'    offline';
 
     let socket = null;
-    initCanvas(socket, dataStruct.image, dataStruct, true);
-
+    initCanvas(socket, dataStruct.canvas, dataStruct, true);
+    dataStruct.messages.forEach(writeMessage);
 }
+
+
+
 
 function textChatOffline() {
     let chatText = document.getElementById('chat_input').value
-    writeOnHistory(chatText);
+    let message = '<b>' + 'Me' + ':</b> ' + chatText
+    writeMessage(message);
+    dataStruct.addMessage(message)
 }
