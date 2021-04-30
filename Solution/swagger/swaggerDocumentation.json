@@ -1,0 +1,131 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "COM3504 Spychat App",
+    "version": "1.0",
+    "description": "Application for communicating spy instructions",
+    "contact": {
+      "name": "Group",
+      "email": "cmoynihan1@sheffield.ac.uk",
+      "url": "https://shef.ac.uk"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Local server"
+    }
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "tags": [
+          "Application Navigation"
+        ],
+        "description": "Get request for login page",
+        "responses": {
+          "200": {
+            "description": "Successful GET request"
+          },
+          "404": {
+            "description": "Page not found"
+          }
+        }
+      }
+    },
+    "/chats": {
+      "get": {
+        "tags": [
+          "Application Navigation"
+        ],
+        "description": "Get request for spychat room connection page",
+        "responses": {
+          "200": {
+            "description": "Successful GET request"
+          },
+          "404": {
+            "description": "Page not found"
+          }
+        }
+      }
+    },
+    "/searchChats": {
+      "get": {
+        "tags": [
+          "Application Navigation"
+        ],
+        "description": "Get request for local storage search page",
+        "responses": {
+          "200": {
+            "description": "Successful GET request"
+          },
+          "404": {
+            "description": "Page not found"
+          }
+        }
+      }
+    },
+    "/media": {
+      "get": {
+        "tags": [
+          "Application Navigation"
+        ],
+        "description": "Get request for Media upload/viewing page",
+        "responses": {
+          "200": {
+            "description": "Successful GET request"
+          },
+          "404": {
+            "description": "Page not found"
+          }
+        }
+      }
+    },
+    "/chats": {
+      "post": {
+        "tags": [
+          "Image storage"
+        ],
+        "description": "Get request for spychat room connection page",
+        "responses": {
+          "200": {
+            "description": "Successful GET request"
+          },
+          "404": {
+            "description": "Page not found"
+          },
+          "500": {
+            "description": "Invalid data error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "user": {
+        "type": "integer",
+        "required": true,
+        "description": "User ID",
+        "example": 12
+      },
+      "file_path": {
+        "type": "string",
+        "required": true,
+        "description": "URL of the image",
+        "example": "images/myPhoto.jpg"
+      },
+       "image": {
+         "type": "object",
+         "properties": {
+           "user": {
+             "$ref": "#/components/schemas/user"
+           },
+           "file_path": {
+             "$ref": "#/components/schemas/file_path"
+           }
+         }
+       }
+    }
+  }
+}
