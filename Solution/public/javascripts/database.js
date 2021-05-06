@@ -7,14 +7,33 @@ let db;
 * @param canvas drawings
 */
 class SpyChat{
-    constructor (image, roomNo){
+    constructor (inputData, roomNo){
+        if(roomNo == undefined){
+            console.log(inputData);
+            this.remakeStructure(inputData);
+        }
+        else{
+            this.newStructure(inputData,roomNo);
+        }
+
+
+    }
+    newStructure(image, roomNo){
         this.room_url =roomNo+image;
         this.image = image;
         this.messages = new Array();
-        this.link = null ;
+        this.linked = null ;
         this.canvas = null;
-
     }
+    remakeStructure(oldData){
+
+        this.room_url = oldData.room_url;
+        this.image = oldData.image;
+        this.messages = oldData.messages;
+        this.linked =  oldData.linked;
+        this.canvas = oldData.canvas;
+    }
+
     storeData(){
         storeDataInCache(this.room_url,this)
             .then(t=>console.log("Successfully stored"))
@@ -32,8 +51,9 @@ class SpyChat{
             .then(t=>console.log("Successfully Saved canvas"))
             .catch(e=>console.log("Error saving canvas:"+e.message))
     }
-    addLink(link){
-        this.link = link;
+
+    addLink(linked){
+        this.linked = linked;
         updateData(this.room_url, this)
             .then(t=>console.log("Successfully Saved link"))
             .catch(e=>console.log("Error saving link:"+e.message))
@@ -93,6 +113,7 @@ async function storeDataInCache(room_url,spyChat) {
 }
 window.storeDataInCache= storeDataInCache;
 
+
 async function updateData(room_url, data) {
     console.log('updating: '+ room_url);
     if (!db)
@@ -100,8 +121,15 @@ async function updateData(room_url, data) {
     if (db) {
         let tx = await db.transaction(SPYCHAT_STORE_NAME, 'readwrite');
         let key = await tx.store.index('room_url').getKey(room_url);
-        await tx.store.put(JSON.stringify(data),key);
-        await  tx.done;
+        if(!(key == undefined)){
+            await tx.store.put(data,key);
+            await  tx.done;
+        }else{
+            throw new CustomError('Key not found');
+        }
+
+
+
     }
 }
 window.storeDataInCache= storeDataInCache;

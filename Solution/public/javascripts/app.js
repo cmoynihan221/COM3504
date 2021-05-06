@@ -1,4 +1,6 @@
 
+
+
 function initMedia() {
     document.getElementById('start').style.display = 'none';
     changeDisplay('prephoto', 'block');
@@ -58,9 +60,7 @@ function save(){
     changeDisplay('usephoto', 'block');
     alert("Photo Saved!");
 }
-function sendphoto(){
-    console.log(document.querySelector('img').src)
-}
+
 function retake(){
     changeDisplay('prephoto', 'block');
     changeDisplay('postphoto', 'none');
@@ -73,18 +73,3 @@ function changeDisplay(className, style){
     }
 }
 
-// cameraNames=[];
-// cameras = [];
-// function getSources(sourcesInfos){
-//     for (let i  = 1; i!=sourcesInfos.length; i++){
-//         let sourceInfo = sourcesInfos[i];
-//         if(sourcesInfos.kind === 'video'){
-//             let text = sourceInfo.label ||
-//                 'camera' + (camera.length + 1);
-//             cameraNames.push(text);
-//             cameras.push(sourceInfo.id);
-//         }
-//
-//     }
-//     videoSource = cameras[cameras.length - 1];
-//}

@@ -37,3 +37,6 @@ body{
     position:absolute; top:0px; left:0px;
     background-color: rgba(255,0,0,.1);
 }
+.canvasButtons{
+    display: inline-block;
+}

@@ -2,7 +2,12 @@
 let name;
 let roomNo = null;
 let socket = io.connect();
+let parent;
 
+function CustomError(message) {
+    this.message = message;
+    this.name = 'Custom Error';
+}
 function changeDisplay(className, style){
     let items = document.getElementsByClassName(className);
     for (let i =0;i < items.length;i++){
@@ -109,7 +114,7 @@ function initSocket() {
  * and sends the message via  socket
  */
 function sendChatText() {
-    let chatText = document.getElementById('chat_input').value;
+    let chatText = document.getElementById('chat_input').value
     socket.emit('chat', roomNo, name, chatText);
 }
 
@@ -146,12 +151,32 @@ function connectToRoom() {
     hideLoginInterface(roomNo, name);
 }
 
-/**
- * it appends the given html text to the history div
- * this is to be called when the socket receives the chat message (socket.on ('message'...)
- * @param text: the text to append
- */
-function writeOnHistory(text) {
+function linkedChat(){
+    //Add try catch for this
+    let filename =document.getElementById('new_image_url').files[0].name;
+    let imageUrl = '/images/'+filename;
+    try{
+        createNewData(imageUrl);
+        document.getElementById('linkadd').style.display="none";
+        document.getElementById('move_to_link').style.display="block";
+        socket.emit('chat', roomNo, name, "Added linked photo.");
+    }catch (e) {
+        alert("Cannot use the same file twice!")
+    }
+
+}
+function createNewData(imgUrl){
+    let newData = new SpyChat(imgUrl,roomNo);
+    if(newData.room_url == data.room_url){
+        throw new CustomError('Duplicate File Error');
+    }
+    data.addLink(imgUrl)
+    parent = data;
+    newData.storeData();
+    document.getElementById('new_image_url').value = null;
+}
+
+function writeMessage(text){
     if (text==='') return;
     let history = document.getElementById('history');
     let paragraph = document.createElement('p');
@@ -160,6 +185,15 @@ function writeOnHistory(text) {
     // scroll to the last element
     history.scrollTop = history.scrollHeight;
     document.getElementById('chat_input').value = '';
+}
+
+/**
+ * it appends the given html text to the history div
+ * this is to be called when the socket receives the chat message (socket.on ('message'...)
+ * @param text: the text to append
+ */
+function writeOnHistory(text) {
+    writeMessage(text);
     data.addMessage(text);
 }
 
@@ -174,14 +208,7 @@ function hideLoginInterface(room, userId) {
     document.getElementById('who_you_are').innerHTML= userId;
     document.getElementById('in_room').innerHTML= ' '+room;
 }
-/*
-window.onbeforeunload =  function saveData(){
-    if(data){
-        let roomurl = data.getID();
-        storeDataInCache(roomurl,data)
-            .then(value => alert("Data Saved"))
-            .catch(e=>handleError())}
-}*/
+
 
 
 
