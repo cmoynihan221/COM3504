@@ -8,7 +8,7 @@
     <link rel='stylesheet' href='/stylesheets/navigation.css'/>
 </head>
 
-<body onload="checkConnection()">
+<body onload="checkConnection()" class="h-100">
 <div class="container-fluid h-100" id="trial">
     <div id="center">
         <div class="row ">
@@ -19,7 +19,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row h-100" >
             <div class="col-md">
                 <% images.forEach(function(image){ %>
                     <img src="<%= image.file_path.replace("Solution/public","") %>"></img>
