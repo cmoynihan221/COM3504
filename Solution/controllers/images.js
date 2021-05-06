@@ -8,7 +8,7 @@ exports.saveImage = function(req, res, next){
     */
         let userId = req.body.userId;
         let currentTime = new Date().getTime();
-        let directory = 'public/images/' + userId + '/';
+        let directory = 'Solution/public/images/' + userId + '/';
         if(!fs.existsSync(directory)){
             try {
                 fs.mkdirSync(directory,  { recursive: true });
