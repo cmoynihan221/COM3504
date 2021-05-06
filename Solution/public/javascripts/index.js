@@ -44,10 +44,11 @@ function init() {
 }
 
 function checkConnection(){
-    if (!name) {
+    if (localStorage.getItem('name') == null || localStorage.getItem('name') == "null") {
         document.getElementById('splash_screen').style.display = 'none';
         document.getElementById('login').style.display = 'block';
     } else {
+        document.getElementById('logoutLabel').textContent = "Logged in as " + localStorage.getItem('name');
         document.getElementById('splash_screen').style.display = 'block';
         document.getElementById('login').style.display = 'none';
     }
@@ -124,12 +125,19 @@ function sendChatText() {
  */
 let data = null;
 
+function logoutOfSplashScreen() {
+    localStorage.setItem('name', null);
+    document.getElementById('name').value = "";
 
+    document.getElementById('login').style.display = 'block';
+    document.getElementById('splash_screen').style.display = 'none';
+}
 
 function loginToSplashScreen() {
     name = document.getElementById('name').value;
     if (!name) name = 'Unknown-' + Math.random();
     localStorage.setItem('name', name);
+    document.getElementById('logoutLabel').textContent = "Logged in as " + name;
 
     document.getElementById('login').style.display = 'none';
     document.getElementById('splash_screen').style.display = 'block';
