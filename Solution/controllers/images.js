@@ -9,9 +9,10 @@ exports.saveImage = function(req, res, next){
         let userId = req.body.userId;
         let currentTime = new Date().getTime();
         let directory = 'Solution/public/images/' + userId + '/';
+        //console.log("file")
         if(!fs.existsSync(directory)){
             try {
-                fs.mkdirSync(directory,  { recursive: true });
+                fs.mkdirSync(directory);
             }catch(e){
                 console.log(e);
             }
@@ -20,8 +21,7 @@ exports.saveImage = function(req, res, next){
 
         let blob =  req.body.imageBlob.replace(/^data:image\/\w+;base64,/,"");
         let buf = new Buffer(blob, 'base64');
-        let path = directory + currentTime+'.png' ;
-        console.log(typeof path);
+        let path = directory + currentTime+'.png';
         fs.writeFile(path, buf, err=>{
             console.log(err);
         });

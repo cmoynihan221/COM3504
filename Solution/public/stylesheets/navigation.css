@@ -1,6 +1,7 @@
 #trial, .trial{
     position:absolute;
     background: linear-gradient(59deg, rgba(33,36,36,1) 31%, rgba(162,168,171,1) 47%, rgba(15,16,17,1) 64%);
+    overflow:scroll;
 }
 #center{
     position:relative;
