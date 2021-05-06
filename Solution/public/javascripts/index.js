@@ -69,14 +69,12 @@ function checkConnection(){
             //hasNetwork(true);
             changeDisplay("online", "block")
             changeDisplay("offline", "none")
-            console.log("online")
         });
         window.addEventListener("offline", () => {
             // Set hasNetwork to offline when they change to offline.
             //hasNetwork(false);
             changeDisplay("online", "none")
             changeDisplay("offline", "block")
-            console.log("offline")
         });
     //});
 }
