@@ -52,9 +52,9 @@ exports.saveImage = function(req, res, next){
 exports.renderImages = function(req, res, next){
     //find all images and send in the list of the filepaths as json to the receiving page
     //render the images on the receiving page
-    Image.remove({}, function(err) {
+    /*Image.remove({}, function(err) {
         console.log('collection removed')
-    });
+    });*/
     try {
         Image.find(
             function (err, images) {
