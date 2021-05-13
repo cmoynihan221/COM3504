@@ -1,15 +1,23 @@
 let Image = require('../models/images');
 const fs = require('fs');
+let path2= require('path');
 exports.saveImage = function(req, res, next){
     //drop the images db
     /*Image.remove({}, function(err) {
           console.log('collection removed')
     });
     */
-        let userId = req.body.userId;
-        let currentTime = new Date().getTime();
-        let directory = 'Solution/public/images/' + userId + '/';
-        //console.log("file")
+    let userId = req.body.userId;
+    let currentTime = new Date().getTime();
+
+    let parent = String(__dirname + "/../");
+    //let imagePath = path2.join(parent, "public/images/");
+
+    let dir_path = 'public/images/' + userId + '/';
+    let directory = path2.join(parent, dir_path);
+    console.log(directory)
+        //let directory = path.dirname(dir)
+        console.log(directory)
         if(!fs.existsSync(directory)){
             try {
                 fs.mkdirSync(directory);
@@ -21,15 +29,17 @@ exports.saveImage = function(req, res, next){
 
         let blob =  req.body.imageBlob.replace(/^data:image\/\w+;base64,/,"");
         let buf = new Buffer(blob, 'base64');
-        let path = directory + currentTime+'.png';
-        fs.writeFile(path, buf, err=>{
+        let pathToImage = directory + currentTime+'.png';
+        fs.writeFile(pathToImage, buf, err=>{
             console.log(err);
         });
-        let filePath = directory + currentTime;
         console.log('file saved!');
+        let filePath = pathToImage.replace(directory,"/images/"+userId+"/")
+    console.log('Path replacing')
+        console.log(filePath)
         let image_data = new Image({
             user: userId,
-            file_path: path
+            file_path: filePath
         });
         image_data.save(function(err, results){
             console.log(err)
