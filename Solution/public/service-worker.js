@@ -96,6 +96,7 @@ self.addEventListener('fetch', function (e) {
                             if (!response.ok || response.statusCode > 299) {
                                 console.log("error: " + response.error());
                             } else {
+                                //when using system online, chats don't send if the below line is uncommented
                                 //cache.add(e.request.url);
                                 return response;
                             }
