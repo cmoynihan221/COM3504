@@ -4,7 +4,6 @@
 let room;
 let userId;
 let color = 'red', thickness = 4;
-
 /**
  * it inits the image canvas to draw on. It sets up the events to respond to (click, mouse on, etc.)
  * it is also the place where the data should be sent  via socket.io
@@ -18,7 +17,8 @@ function initCanvas(sckt, imageUrl, data,offline) {
         userId = localStorage.getItem('name');
     }
 
-
+    document.getElementById("before").style.display ="none"
+    document.getElementById("disappear").style.display ="none"
     let flag = false,
         prevX, prevY, currX, currY = 0;
     let canvas = $('#canvas');
@@ -40,8 +40,10 @@ function initCanvas(sckt, imageUrl, data,offline) {
         if (e.type === 'mouseup' || e.type === 'mouseout') {
             if(flag == true){
                 data.updateCanvas(cvx.toDataURL());
+                document.getElementById("disappear").style.display ="block"
             }
             flag = false;
+
         }
         // if the flag is up, the movement of the mouse draws on the canvas
         if (e.type === 'mousemove') {
@@ -51,6 +53,7 @@ function initCanvas(sckt, imageUrl, data,offline) {
                 socket.emit('draw', room, userId, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness);}
             }
         }
+
 
     });
 
@@ -67,11 +70,18 @@ function initCanvas(sckt, imageUrl, data,offline) {
     });
 
     // called when an annotation is received
+    let started_drawing;
     if(!offline){
     socket.on('draw', function (room, userId, canvasWidth, canvasHeight, x1, y1, x2, y2, color, thickness) {
         let ctx = canvas[0].getContext('2d');
+        started_drawing=true
+        console.log("STARTED DRAWING")
         drawOnCanvas(ctx, canvasWidth, canvasHeight, x1, y1, x2, y2, color, thickness,);
+
     });}
+    if (started_drawing){
+        console.log("STOPPED DRAWING")
+    }
     if(!offline){
     socket.on('clear canvas', function (room, userId) {
         img.style.display = 'block';
@@ -97,6 +107,49 @@ function initCanvas(sckt, imageUrl, data,offline) {
         }, 10);
     });
 }
+const service_url = 'https://kgsearch.googleapis.com/v1/entities:search';
+const apiKey= 'AIzaSyAG7w627q-djB4gTTahssufwNOImRqdYKM';
+
+/**
+ * it inits the widget by selecting the type from the field myType
+ * and it displays the Google Graph widget
+ * it also hides the form to get the type
+ */
+function widgetInit(){
+    let type = document.getElementById("type").value
+    document.getElementById("disappear").style.display ="none"
+    document.getElementById("before").style.display ="block"
+    document.getElementById("before").innerHTML += "of type " + type;
+    let types = [type]
+    let config = {
+        'limit': 10,
+        'languages': ['en'],
+        'maxDescChars': 100,
+        'selectHandler': selectItem,
+        'types':types,
+    }
+    KGSearchWidget(apiKey, document.getElementById("myInput"), config);
+}
+
+function atFirst (){
+    document.getElementById("before").style.display ="none"
+}
+
+/**
+ * callback called when an element in the widget is selected
+ * @param event the Google Graph widget event {@link https://developers.google.com/knowledge-graph/how-tos/search-widget}
+ */
+//let x = 0
+function selectItem(event){
+    let row= event.row;
+    console.log(row)
+    //document.getElementById('resultPanel').innerHTML= '<PRE>'+JSON.stringify(row, null, 4)+'</PRE>';
+    document.getElementById('resultPanel').innerHTML+= '<div><h1>'+row['name']+'</h1>'+'<p>id:'+row['id']+'</p><p>'+row['rc']+'</p><a href='+row['qc']+'>Link to Webpage</a></div>';
+    document.getElementById("before").style.display ="none"
+    document.getElementById("disappear").style.display ="none"
+
+}
+
 
 function reDrawCanvas(img, ctx, cvx, canvas){
     // resize the canvas
