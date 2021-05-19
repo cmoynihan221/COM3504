@@ -1,7 +1,7 @@
 /**
  * this file contains the functions to control the drawing on the canvas
  */
-let room;
+let roomNum;
 let userId;
 let color = 'red', thickness = 4;
 /**
@@ -10,10 +10,14 @@ let color = 'red', thickness = 4;
  * @param sckt the open socket to register events on
  * @param imageUrl the image url to download
  */
-function initCanvas(sckt, imageUrl, data,offline) {
+function initCanvas(sckt, imageUrl, data, offline, roomNumber) {
     if(!offline){
         socket = sckt;
-        room = document.getElementById('roomNo').value;
+        if (roomNumber == null) {
+            roomNum = document.getElementById('roomNo').value;
+        } else {
+            roomNum = roomNumber;
+        }
         userId = localStorage.getItem('name');
     }
 
@@ -50,7 +54,7 @@ function initCanvas(sckt, imageUrl, data,offline) {
             if (flag) {
                 drawOnCanvas(ctx, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness);
                 if(!offline){
-                socket.emit('draw', room, userId, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness);}
+                socket.emit('draw', roomNum, userId, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness);}
             }
         }
 
@@ -61,7 +65,7 @@ function initCanvas(sckt, imageUrl, data,offline) {
     // this is code left in case you need to  provide a button clearing the canvas (it is suggested that you implement it)
     $('.canvas-clear').on('click', function (e) {
         if(!offline){
-            socket.emit('clear canvas', room, userId);}
+            socket.emit('clear canvas', roomNum, userId);}
         else{
             img.style.display = 'block';
             reDrawCanvas(img, ctx, cvx, canvas);
@@ -73,21 +77,24 @@ function initCanvas(sckt, imageUrl, data,offline) {
     let started_drawing;
     if(!offline){
     socket.on('draw', function (room, userId, canvasWidth, canvasHeight, x1, y1, x2, y2, color, thickness) {
-        let ctx = canvas[0].getContext('2d');
-        started_drawing=true
-        console.log("STARTED DRAWING")
-        drawOnCanvas(ctx, canvasWidth, canvasHeight, x1, y1, x2, y2, color, thickness,);
-
+        if (room == roomNum) {
+            let ctx = canvas[0].getContext('2d');
+            started_drawing = true
+            console.log("STARTED DRAWING")
+            drawOnCanvas(ctx, canvasWidth, canvasHeight, x1, y1, x2, y2, color, thickness,);
+        }
     });}
     if (started_drawing){
         console.log("STOPPED DRAWING")
     }
     if(!offline){
     socket.on('clear canvas', function (room, userId) {
-        img.style.display = 'block';
-        reDrawCanvas(img, ctx, cvx, canvas);
-        data.updateCanvas(cvx.toDataURL());
-        writeOnHistory('<b>' + userId + '</b> cleared the canvas. ');
+        if (room == roomNum) {
+            img.style.display = 'block';
+            reDrawCanvas(img, ctx, cvx, canvas);
+            data.updateCanvas(cvx.toDataURL());
+            writeOnHistory('<b>' + userId + '</b> cleared the canvas. ');
+        }
     });}
 
     console.log("started")

@@ -10,11 +10,6 @@ exports.init = function(io) {
         io.to(room).emit('joined', room, userId);
       });
 
-      socket.on('move to linked', function (room, userId) {
-        socket.join(room);
-        io.to(room).emit('joined', room, userId);
-      })
-
       socket.on('chat', function (room, userId, chatText) {
         io.to(room).emit('chat', room, userId, chatText);
       });

@@ -96,9 +96,11 @@ function initSocket() {
     });
     // called when a message is received
     socket.on('chat', function (room, userId, chatText) {
-        let who = userId
-        if (userId === name) who = 'Me';
-        writeOnHistory('<b>' + who + ':</b> ' + chatText);
+        if (room == roomNo) {
+            let who = userId
+            if (userId === name) who = 'Me';
+            writeOnHistory('<b>' + who + ':</b> ' + chatText);
+        }
     });
 }
 
@@ -137,6 +139,7 @@ function loginToSplashScreen() {
 
 function connectToRoom() {
     roomNo = document.getElementById('roomNo').value;
+    localStorage.setItem('linkedRoom', null);
     name = localStorage.getItem('name');
     //name = document.getElementById('name').value;
     //let imageUrl= document.getElementById('image_url').value;
@@ -146,15 +149,21 @@ function connectToRoom() {
     //console.log("Image path ", imageUrl)
     socket.emit('create or join', roomNo, name);
     data = new SpyChat(imageUrl,roomNo);
-    initCanvas(socket, imageUrl, data, false);
+    initCanvas(socket, imageUrl, data, false, roomNo);
     data.storeData();
     hideLoginInterface(roomNo, name);
 }
 
 function moveToLinked() {
+    if (localStorage.getItem('linkedRoom') == null || localStorage.getItem('linkedRoom') == "null") {
+        localStorage.setItem('linkedRoom', 'R' + Math.round(Math.random() * 10000));
+    }
+    roomNo = localStorage.getItem('linkedRoom');
+    socket.emit('create or join', localStorage.getItem('linkedRoom'), name);
     let imageUrl = data.linked;
-    socket.emit('create or join', roomNo, name);
-    initCanvas(socket, imageUrl, data, false);
+    initCanvas(socket, imageUrl, data, false, roomNo);
+    document.getElementById('linkadd').style.display="block";
+    document.getElementById('move_to_link').style.display="none";
 }
 
 function linkedChat(){
