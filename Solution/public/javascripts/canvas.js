@@ -100,6 +100,7 @@ function initCanvas(sckt, imageUrl, data,offline) {
         let poll = setInterval(function () {
             if (img.naturalHeight) {
                 clearInterval(poll);
+                img.style.display = 'block';
                 reDrawCanvas(img, ctx, cvx, canvas);
 
                 data.updateCanvas(cvx.toDataURL());

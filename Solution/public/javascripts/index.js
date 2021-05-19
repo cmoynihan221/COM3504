@@ -151,6 +151,12 @@ function connectToRoom() {
     hideLoginInterface(roomNo, name);
 }
 
+function moveToLinked() {
+    let imageUrl = data.linked;
+    socket.emit('create or join', roomNo, name);
+    initCanvas(socket, imageUrl, data, false);
+}
+
 function linkedChat(){
     //Add try catch for this
     let filename =document.getElementById('new_image_url').files[0].name;
