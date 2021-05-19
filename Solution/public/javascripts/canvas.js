@@ -3,7 +3,10 @@
  */
 let roomNum;
 let userId;
-let color = 'red', thickness = 4;
+let colors = ['red', 'white', 'blue', 'yellow','brown', 'black','pink','gray','indigo','purple','green', 'orange']
+let thickness = 4;
+let color, random
+let change;
 /**
  * it inits the image canvas to draw on. It sets up the events to respond to (click, mouse on, etc.)
  * it is also the place where the data should be sent  via socket.io
@@ -21,8 +24,8 @@ function initCanvas(sckt, imageUrl, data, offline, roomNumber) {
         userId = localStorage.getItem('name');
     }
 
-    document.getElementById("before").style.display ="none"
-    document.getElementById("disappear").style.display ="none"
+    document.getElementById("typeSet").style.display ="none"
+    document.getElementById("searchKG").style.display ="none"
     let flag = false,
         prevX, prevY, currX, currY = 0;
     let canvas = $('#canvas');
@@ -31,9 +34,12 @@ function initCanvas(sckt, imageUrl, data, offline, roomNumber) {
     let ctx = cvx.getContext('2d');
     console.log("Canvas created:" + canvas);
     img.src = imageUrl;
-
+    /*random=Math.floor(Math.random()*(colors.length-1))
+    color = colors[random]
+    console.log(random);*/
     // event on the canvas when the mouse is on it
     canvas.on('mousemove mousedown mouseup mouseout', function (e) {
+
         prevX = currX;
         prevY = currY;
         currX = e.clientX - canvas.position().left;
@@ -43,8 +49,13 @@ function initCanvas(sckt, imageUrl, data, offline, roomNumber) {
         }
         if (e.type === 'mouseup' || e.type === 'mouseout') {
             if(flag == true){
+                random=Math.floor(Math.random()*(colors.length-1))
+                color = colors[random]
+                console.log(random);
+                change = ctx.strokeStyle
+                console.log(ctx.strokeStyle)
                 data.updateCanvas(cvx.toDataURL());
-                document.getElementById("disappear").style.display ="block"
+                document.getElementById("typeSet").style.display ="block"
             }
             flag = false;
 
@@ -52,9 +63,9 @@ function initCanvas(sckt, imageUrl, data, offline, roomNumber) {
         // if the flag is up, the movement of the mouse draws on the canvas
         if (e.type === 'mousemove') {
             if (flag) {
-                drawOnCanvas(ctx, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness);
+                drawOnCanvas(ctx, canvas.width, canvas.height, prevX, prevY, currX, currY,  color, thickness);
                 if(!offline){
-                socket.emit('draw', roomNum, userId, canvas.width, canvas.height, prevX, prevY, currX, currY, color, thickness);}
+                    socket.emit('draw', roomNum, userId, canvas.width, canvas.height, prevX, prevY, currX, currY,  color, thickness);}
             }
         }
 
@@ -74,19 +85,15 @@ function initCanvas(sckt, imageUrl, data, offline, roomNumber) {
     });
 
     // called when an annotation is received
-    let started_drawing;
+
     if(!offline){
-    socket.on('draw', function (room, userId, canvasWidth, canvasHeight, x1, y1, x2, y2, color, thickness) {
+        socket.on('draw', function (room, userId, canvasWidth, canvasHeight, x1, y1, x2, y2, color, thickness) {
         if (room == roomNum) {
             let ctx = canvas[0].getContext('2d');
-            started_drawing = true
-            console.log("STARTED DRAWING")
             drawOnCanvas(ctx, canvasWidth, canvasHeight, x1, y1, x2, y2, color, thickness,);
         }
     });}
-    if (started_drawing){
-        console.log("STOPPED DRAWING")
-    }
+
     if(!offline){
     socket.on('clear canvas', function (room, userId) {
         if (room == roomNum) {
@@ -125,9 +132,9 @@ const apiKey= 'AIzaSyAG7w627q-djB4gTTahssufwNOImRqdYKM';
  */
 function widgetInit(){
     let type = document.getElementById("type").value
-    document.getElementById("disappear").style.display ="none"
-    document.getElementById("before").style.display ="block"
-    document.getElementById("before").innerHTML += "of type " + type;
+    document.getElementById("typeSet").style.display ="none"
+    document.getElementById("searchKG").style.display ="block"
+    document.getElementById("typeReplaced").innerHTML = "of type " + type;
     let types = [type]
     let config = {
         'limit': 10,
@@ -139,22 +146,20 @@ function widgetInit(){
     KGSearchWidget(apiKey, document.getElementById("myInput"), config);
 }
 
-function atFirst (){
-    document.getElementById("before").style.display ="none"
-}
 
 /**
  * callback called when an element in the widget is selected
  * @param event the Google Graph widget event {@link https://developers.google.com/knowledge-graph/how-tos/search-widget}
  */
-//let x = 0
 function selectItem(event){
     let row= event.row;
     console.log(row)
     //document.getElementById('resultPanel').innerHTML= '<PRE>'+JSON.stringify(row, null, 4)+'</PRE>';
-    document.getElementById('resultPanel').innerHTML+= '<div><h1>'+row['name']+'</h1>'+'<p>id:'+row['id']+'</p><p>'+row['rc']+'</p><a href='+row['qc']+'>Link to Webpage</a></div>';
-    document.getElementById("before").style.display ="none"
-    document.getElementById("disappear").style.display ="none"
+    document.getElementById('resultPanel').innerHTML+= '<div id="'+row['id']+'"><h1>'+row['name']+'</h1>'+'<p>id:'+row['id']+'</p><p>'+row['rc']+'</p><a href='+row['qc']+'>Link to Webpage</a></div>';
+    document.getElementById("searchKG").style.display ="none"
+    document.getElementById("typeSet").style.display ="none"
+    console.log(change)
+    document.getElementById(row['id']).style.border = "solid "+change;
 
 }
 
@@ -213,7 +218,7 @@ function drawImageScaled(img, canvas, ctx) {
  * @param color of the line
  * @param thickness of the line
  */
-function drawOnCanvas(ctx, canvasWidth, canvasHeight, prevX, prevY, currX, currY, color, thickness) {
+function drawOnCanvas(ctx, canvasWidth, canvasHeight, prevX, prevY, currX, currY, color,thickness) {
     //get the ration between the current canvas and the one it has been used to draw on the other comuter
     let ratioX= canvas.width/canvasWidth;
     let ratioY= canvas.height/canvasHeight;
@@ -225,6 +230,9 @@ function drawOnCanvas(ctx, canvasWidth, canvasHeight, prevX, prevY, currX, currY
     ctx.beginPath();
     ctx.moveTo(prevX, prevY);
     ctx.lineTo(currX, currY);
+    //random =
+    //color = colors[random]
+
     ctx.strokeStyle = color;
     ctx.lineWidth = thickness;
     ctx.stroke();

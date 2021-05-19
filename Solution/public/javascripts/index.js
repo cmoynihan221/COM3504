@@ -49,11 +49,11 @@ function checkConnection(){
 
     console.log("here")
 
-    if ('serviceWorker' in navigator) {
+    /*if ('serviceWorker' in navigator) {
         navigator.serviceWorker
             .register('./service-worker.js')
             .then(function() { console.log('Service Worker Registered'); });
-    }
+    }*/
 
     changeDisplay("offline", "none")
     //window.addEventListener("load", () => {

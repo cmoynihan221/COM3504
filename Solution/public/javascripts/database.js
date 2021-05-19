@@ -127,9 +127,6 @@ async function updateData(room_url, data) {
         }else{
             throw new CustomError('Key not found');
         }
-
-
-
     }
 }
 window.storeDataInCache= storeDataInCache;
