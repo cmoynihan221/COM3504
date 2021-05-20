@@ -51,11 +51,11 @@ function checkConnection(){
     }
 
 
-    /*if ('serviceWorker' in navigator) {
+    if ('serviceWorker' in navigator) {
         navigator.serviceWorker
             .register('./service-worker.js')
             .then(function() { console.log('Service Worker Registered'); });
-    }*/
+    }
 
     changeDisplay("offline", "none")
     //window.addEventListener("load", () => {
@@ -173,7 +173,7 @@ function connectToRoom() {
     console.log("imageURL"+imageUrl)
     socket.emit('create or join', roomNo, name);
     data = new SpyChat(imageUrl,roomNo);
-    initCanvas(socket, imageUrl, data, false, roomNo);
+    initCanvas(socket, imageUrl, data, false, roomNo, name);
     data.storeData();
     hideLoginInterface(roomNo, name);
 }
@@ -185,7 +185,7 @@ function moveToLinked() {
     roomNo = localStorage.getItem('linkedRoom');
     socket.emit('create or join', localStorage.getItem('linkedRoom'), name);
     let imageUrl = data.linked;
-    initCanvas(socket, imageUrl, data, false, roomNo);
+    initCanvas(socket, imageUrl, data, false, roomNo, name);
     document.getElementById('linkadd').style.display="block";
     document.getElementById('move_to_link').style.display="none";
 }

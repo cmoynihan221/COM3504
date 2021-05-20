@@ -13,8 +13,8 @@ let change;
  * @param sckt the open socket to register events on
  * @param imageUrl the image url to download
  */
-function initCanvas(sckt, imageUrl, data, offline, roomNumber) {
-    console.log("initialising canvas "+ imageUrl)
+
+function initCanvas(sckt, imageUrl, data, offline, roomNumber, user) {
     if(!offline){
         socket = sckt;
         if (roomNumber == null) {
@@ -22,11 +22,20 @@ function initCanvas(sckt, imageUrl, data, offline, roomNumber) {
         } else {
             roomNum = roomNumber;
         }
-        userId = localStorage.getItem('name');
+
+        if (user == null) {
+            userId = localStorage.getItem('name');
+        } else {
+            userId = user;
+        }
     }
 
-    document.getElementById("typeSet").style.display ="none"
-    document.getElementById("searchKG").style.display ="none"
+    if (document.getElementById("typeSet") != null) {
+        document.getElementById("typeSet").style.display ="none";
+    }
+    if (document.getElementById("searchKG") != null) {
+        document.getElementById("searchKG").style.display ="none";
+    }
     let flag = false,
         prevX, prevY, currX, currY = 0;
     let canvas = $('#canvas');
@@ -58,7 +67,9 @@ function initCanvas(sckt, imageUrl, data, offline, roomNumber) {
                 change = ctx.strokeStyle
                 console.log(ctx.strokeStyle)
                 data.updateCanvas(cvx.toDataURL());
-                document.getElementById("typeSet").style.display ="block"
+                if (document.getElementById("typeSet") != null) {
+                    document.getElementById("typeSet").style.display ="block";
+                }
             }
             flag = false;
 
@@ -77,9 +88,10 @@ function initCanvas(sckt, imageUrl, data, offline, roomNumber) {
 
 
     // this is code left in case you need to  provide a button clearing the canvas (it is suggested that you implement it)
-    $('.canvas-clear').on('click', function (e) {
+    $('.canvas-clear').unbind().on('click', function (e) {
         if(!offline){
-            socket.emit('clear canvas', roomNum, userId);}
+            socket.emit('clear canvas', roomNum, userId);
+        }
         else{
             img.style.display = 'block';
             reDrawCanvas(img, ctx, cvx, canvas);
