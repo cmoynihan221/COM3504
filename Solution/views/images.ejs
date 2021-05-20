@@ -27,8 +27,11 @@
         <div class="row h-100" >
             <div class="col-md">
                 <% images.forEach(function(image){ %>
-                    <img src="<%= image.file_path%>"></img>
+                <a href="/chats<%= image.file_path%>" >
 
+                    <img src="<%= image.file_path%>" ></img>
+
+                </a>
                 <% })%>
             </div>
 

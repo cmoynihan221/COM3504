@@ -14,6 +14,7 @@ let change;
  * @param imageUrl the image url to download
  */
 function initCanvas(sckt, imageUrl, data, offline, roomNumber) {
+    console.log("initialising canvas "+ imageUrl)
     if(!offline){
         socket = sckt;
         if (roomNumber == null) {
@@ -34,6 +35,8 @@ function initCanvas(sckt, imageUrl, data, offline, roomNumber) {
     let ctx = cvx.getContext('2d');
     console.log("Canvas created:" + canvas);
     img.src = imageUrl;
+    console.log(imageUrl)
+    console.log("Image src from canvas"+img.src)
     /*random=Math.floor(Math.random()*(colors.length-1))
     color = colors[random]
     console.log(random);*/
@@ -181,8 +184,6 @@ function reDrawCanvas(img, ctx, cvx, canvas){
     drawImageScaled(img, cvx, ctx);
     // hide the image element as it is not needed
     img.style.display = 'none';
-
-
 }
 /**
  * called when it is required to draw the image on the canvas. We have resized the canvas to the same image size
@@ -230,9 +231,6 @@ function drawOnCanvas(ctx, canvasWidth, canvasHeight, prevX, prevY, currX, currY
     ctx.beginPath();
     ctx.moveTo(prevX, prevY);
     ctx.lineTo(currX, currY);
-    //random =
-    //color = colors[random]
-
     ctx.strokeStyle = color;
     ctx.lineWidth = thickness;
     ctx.stroke();

@@ -4,6 +4,8 @@ let roomNo = null;
 let socket = io.connect();
 let parent;
 
+let imageSelected;
+
 function CustomError(message) {
     this.message = message;
     this.name = 'Custom Error';
@@ -38,6 +40,7 @@ function init() {
 }
 
 function checkConnection(){
+
     if (localStorage.getItem('name') == null || localStorage.getItem('name') == "null") {
         document.getElementById('splash_screen').style.display = 'none';
         document.getElementById('login').style.display = 'block';
@@ -47,7 +50,6 @@ function checkConnection(){
         document.getElementById('login').style.display = 'none';
     }
 
-    console.log("here")
 
     /*if ('serviceWorker' in navigator) {
         navigator.serviceWorker
@@ -83,6 +85,23 @@ function generateRoom() {
     document.getElementById('roomNo').value = 'R' + roomNo;
 }
 
+function selectImage(){
+    let x = document.referrer
+    //console.log(previousPage)
+    console.log("Image clicked")
+    //window.location.href="http://localhost:3000/chats"
+}
+function loadImage(image){
+    console.log("entered")
+    if (image){
+
+        document.getElementById('selecting_image').style.display="none"
+        document.getElementById('already_selected').style.display="block"
+        imageSelected =image
+    }
+
+    console.log(image)
+}
 function initSocket() {
     // called when someone joins the room. If it is someone else it notifies the joining of the room
     socket.on('joined', function (room, userId) {
@@ -143,10 +162,15 @@ function connectToRoom() {
     name = localStorage.getItem('name');
     //name = document.getElementById('name').value;
     //let imageUrl= document.getElementById('image_url').value;
-    let filename =document.getElementById('image_url') .files[0].name;
-    //if (!name) name = 'Unknown-' + Math.random();
-    let imageUrl = '/images/'+filename;
-    //console.log("Image path ", imageUrl)
+    let imageUrl;
+    console.log(imageSelected)
+    if (imageSelected){
+        imageUrl = imageSelected
+    }else{
+        let filename =document.getElementById('image_url') .files[0].name;
+        imageUrl = '/images/'+filename;
+    }
+    console.log("imageURL"+imageUrl)
     socket.emit('create or join', roomNo, name);
     data = new SpyChat(imageUrl,roomNo);
     initCanvas(socket, imageUrl, data, false, roomNo);
