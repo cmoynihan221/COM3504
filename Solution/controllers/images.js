@@ -13,7 +13,7 @@ exports.saveImage = function(req, res, next){
     let parent = String(__dirname + "/../");
     //let imagePath = path2.join(parent, "public/images/");
 
-    let dir_path = 'public/images/' + userId + '/';
+    let dir_path = 'public/images/' //+ userId + '/';
     let directory = path2.join(parent, dir_path);
     console.log(directory)
         //let directory = path.dirname(dir)
