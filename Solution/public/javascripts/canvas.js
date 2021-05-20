@@ -13,7 +13,7 @@ let change;
  * @param sckt the open socket to register events on
  * @param imageUrl the image url to download
  */
-function initCanvas(sckt, imageUrl, data, offline, roomNumber) {
+function initCanvas(sckt, imageUrl, data, offline, roomNumber, user) {
     if(!offline){
         socket = sckt;
         if (roomNumber == null) {
@@ -21,7 +21,12 @@ function initCanvas(sckt, imageUrl, data, offline, roomNumber) {
         } else {
             roomNum = roomNumber;
         }
-        userId = localStorage.getItem('name');
+
+        if (user == null) {
+            userId = localStorage.getItem('name');
+        } else {
+            userId = user;
+        }
     }
 
     if (document.getElementById("typeSet") != null) {
@@ -80,7 +85,7 @@ function initCanvas(sckt, imageUrl, data, offline, roomNumber) {
 
 
     // this is code left in case you need to  provide a button clearing the canvas (it is suggested that you implement it)
-    $('.canvas-clear').on('click', function (e) {
+    $('.canvas-clear').unbind().on('click', function (e) {
         if(!offline){
             socket.emit('clear canvas', roomNum, userId);
         }

@@ -31,7 +31,7 @@ function setTarget(data,i){
     document.getElementById('in_room').innerHTML= ' ' +dataStruct.room_url+'    offline';
 
     let socket = null;
-    initCanvas(socket, dataStruct.canvas, dataStruct, true, null);
+    initCanvas(socket, dataStruct.canvas, dataStruct, true, null, name);
     dataStruct.messages.forEach(writeMessage);
 }
 
