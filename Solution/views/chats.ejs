@@ -17,7 +17,7 @@
 
     <link rel='stylesheet' href='/stylesheets/navigation.css'/>
 </head>
-<body onload="init()" >
+<body onload="init();loadImage('<%= imagePath%>');" >
 <div class="row">
     <div class="col-md">
         <a href="/" class="btn btn-light">Return to Home</a>
@@ -35,8 +35,8 @@
             <input type="text" id="roomNo" name="roomNo">
             <button id="roomNoGenerator" onclick="generateRoom()">Generate Room</button>
         </p>
-        <p style=" width: 100%"><label for="image_url"> Images (URL) </label><input type="file"  id="image_url" name="image_url"></p>
-        <p>
+        <p style=" width: 100%" id="selecting_image"><label for="image_url"> Images (URL) </label><input type="file" id="image_url" name="image_url"></p>
+        <p id="already_selected" style="display: none">Selected image: <%= imagePath%></p>
             <a href="/media">Take photo</a>
         </p>
         <button id="connect" onclick="connectToRoom()">Connect</button>
@@ -59,14 +59,15 @@
 
             <div class="col-6">
                 <div class="myRow" id='widget'>
-                    <div id="disappear">
+                    <div id="typeSet">
                         <label for="type">Type:</label>
                         <input type="text" id="type">
                         <button onclick="widgetInit()">Set type</button>
                     </div>
 
-                    <div id="before">
+                    <div id="searchKG" >
                         <label for="myInput">Search for: </label><input type="text" id="myInput">
+                        <div id="typeReplaced" style="display: inline-block"></div>
                     </div>
 
                     <div class='resultPanel' id="resultPanel" >
