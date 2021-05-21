@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const Images = new Schema(
     {
-        user: {type: Number, required: true},
+        user: {type: String, required: true},
         file_path: {type: String, required: true}
     }
 );
