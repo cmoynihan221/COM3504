@@ -3,7 +3,6 @@ let name;
 let roomNo = null;
 let socket = io.connect();
 let parent;
-
 let imageSelected;
 
 function CustomError(message) {
