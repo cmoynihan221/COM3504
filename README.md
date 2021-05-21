@@ -24,4 +24,4 @@ field,click on the folder icon and navigate to 'Solution\bin\www'.
    
 4. For the environment variables field, fill in 'DEBUG=week-3.c-socket.io-chat:*'
 
-5. This should allow for the app to be run on the port number in the console when the run icon is clicked.
+5. This should allow for the app to be run  in the console when the run icon is clicked. On the browser, connect to  http://localhost:3000/ to start the app.
