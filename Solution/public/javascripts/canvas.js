@@ -171,7 +171,13 @@ function selectItem(event){
 
 }
 
-
+/**
+ * redraws image after canvas clear
+ * @param img - image url
+ * @param ctx
+ * @param cvx
+ * @param canvas
+ */
 function redrawCanvas(img, ctx, cvx, canvas){
     // resize the canvas
     let ratioX=1;

@@ -5,10 +5,21 @@ let socket = io.connect();
 let parent;
 let imageSelected;
 
+/**
+ * creates custom error
+ * @param message
+ * @constructor
+ */
 function CustomError(message) {
     this.message = message;
     this.name = 'Custom Error';
 }
+
+/**
+ * changes display of a class
+ * @param className
+ * @param style
+ */
 function changeDisplay(className, style){
     let items = document.getElementsByClassName(className);
     for (let i =0;i < items.length;i++){
@@ -38,6 +49,9 @@ function init() {
     }
 }
 
+/**
+ * checks connection and loads correct screen
+ */
 function checkConnection(){
 
     if (localStorage.getItem('name') == null || localStorage.getItem('name') == "null") {
@@ -146,6 +160,9 @@ function logoutOfSplashScreen() {
     document.getElementById('splash_screen').style.display = 'none';
 }
 
+/**
+ * sets up login data
+ */
 function loginToSplashScreen() {
     name = document.getElementById('name').value;
     if (!name) name = 'Unknown-' + Math.random();
@@ -200,6 +217,9 @@ function moveToLinked() {
     document.getElementById('move_to_link').style.display="none";
 }
 
+/**
+ * Moves to linked image
+ */
 function linkedChat(){
     if(document.getElementById('new_image_url').files[0] == undefined) {
         alert("Must choose a file");
@@ -218,6 +238,11 @@ function linkedChat(){
     }
 
 }
+
+/**
+ * Creates a new data store
+ * @param imgUrl  - image url to store
+ */
 function createNewData(imgUrl){
     let newData = new SpyChat(imgUrl,roomNo);
     if(newData.room_url == data.room_url){
@@ -229,6 +254,10 @@ function createNewData(imgUrl){
     document.getElementById('new_image_url').value = null;
 }
 
+/**
+ * Writes message on chat
+ * @param text
+ */
 function writeMessage(text){
     if (text==='') return;
     let history = document.getElementById('history');

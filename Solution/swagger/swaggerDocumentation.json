@@ -81,12 +81,79 @@
         }
       }
     },
-    "/chats": {
+    "/allImages": {
+      "get": {
+        "tags": [
+          "Image storage"
+        ],
+        "description": "Get request for stored images",
+        "responses": {
+          "200": {
+            "description": "Successful GET request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/images"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Page not found"
+          },
+          "500": {
+            "description":  "Error invalid data"
+          }
+        }
+      }
+    },
+    "/chats/:image_path/:image": {
+      "get": {
+        "tags": [
+          "Image storage"
+        ],
+        "description": "Moves image to chat room",
+        "parameters": [
+          {
+            "name": "image_path",
+            "description": "file path to image",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/imagepath"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful GET request"
+          },
+          "404": {
+            "description": "Page not found"
+          },
+
+
+
+
+        }
+      }
+    },
+    "/save_image": {
       "post": {
         "tags": [
           "Image storage"
         ],
         "description": "Get request for spychat room connection page",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/image"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "Successful GET request"
@@ -103,29 +170,39 @@
   },
   "components": {
     "schemas": {
-      "user": {
-        "type": "integer",
+      "userId": {
+        "type": "String",
         "required": true,
         "description": "User ID",
-        "example": 12
+        "example": "Example String"
       },
-      "file_path": {
-        "type": "string",
+      "imageBlob": {
+        "type": "Blob",
         "required": true,
-        "description": "URL of the image",
-        "example": "images/myPhoto.jpg"
+        "description": "image data"
       },
-       "image": {
+      "imagepath": {
+        "type": "String",
+        "required": true,
+        "description": "image path"
+      },
+      "image": {
          "type": "object",
          "properties": {
            "user": {
-             "$ref": "#/components/schemas/user"
+             "$ref": "#/components/schemas/userId"
            },
            "file_path": {
-             "$ref": "#/components/schemas/file_path"
+             "$ref": "#/components/schemas/imageBlob"
            }
          }
-       }
+       },
+      "images": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/imageBlob"
+        }
+      }
     }
   }
 }

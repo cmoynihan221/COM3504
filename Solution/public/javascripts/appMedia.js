@@ -135,10 +135,13 @@ function save(){
     alert("Photo Saved!");
 }
 
+/**
+ * Gets chached images and attempts to save on server
+ */
 function saveImagesInLocal(){
     try{
         getCachedData('upload_store')
-            .then(data => data.forEach(image=>saveImage(image)))
+            .then(data => data.forEach(image=>saveImage(image, undefined)))
             .catch(e=> console.log(e));
 
         wipeData('upload_store')
@@ -158,8 +161,12 @@ window.saveImagesInLocal = saveImagesInLocal;
  * @param imageBlob     Blob of the image to be saved
  */
 function saveImage(userID, imageBlob){
-    let data = {userId: userID, imageBlob: imageBlob};
+    let data;
+    if(imageBlob != undefined){
 
+    data = {userId: userID, imageBlob: imageBlob};}
+    else{data = userID;
+    }
     $.ajax({
         dataType: "json",
         url: '/save_image',
@@ -172,7 +179,7 @@ function saveImage(userID, imageBlob){
             console.log("SAVED IMAGE!!");
         },
         error: function (err) {
-            storeDataInCache(data,'upload_store')
+            storeDataInCache(JSON.stringify(data),'upload_store')
                 .then(t=>console.log("Successfully stored in upload"))
                 .catch(e=>console.log("Error saving data:"+e.message))
         }

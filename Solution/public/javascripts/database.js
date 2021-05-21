@@ -18,14 +18,15 @@ class SpyChat{
     }
     newStructure(image, roomNo){
         this.room_url =roomNo+image;
+        this.room = roomNo;
         this.image = image;
         this.messages = new Array();
         this.linked = null ;
         this.canvas = null;
     }
     remakeStructure(oldData){
-
         this.room_url = oldData.room_url;
+        this.room = oldData.room;
         this.image = oldData.image;
         this.messages = oldData.messages;
         this.linked =  oldData.linked;
@@ -136,7 +137,12 @@ async function storeDataInCache(data, DB_name) {
 }
 window.storeDataInCache= storeDataInCache;
 
-
+/**
+ * Updates a record in indexed db
+ * @param room_url - the room url
+ * @param data - data to update
+ * @returns {Promise<void>}
+ */
 async function updateData(room_url, data) {
     console.log('updating: '+ room_url);
     if (!db)
@@ -155,7 +161,7 @@ async function updateData(room_url, data) {
 window.updateDate= updateData;
 
 /**
- *
+ * gets the whole data store
  * @param room_url room number + url of photo
  * @returns {Promise<*>} the chat object
  */
@@ -186,19 +192,20 @@ async function getCachedData(store_name) {
 window.getCachedData= getCachedData;
 
 /**
- *
+ *gets a specific piece of data from a store
  * @param store_name db store
  * @param key value to find
  * @returns {Promise<*>} the chat object
  */
-async function getData(store_name,key ) {
+async function getData(store_name,key,indexname ) {
     if (!db)
         await initDatabase();
     if (db) {
         try {
             let tx = await db.transaction(store_name, 'readonly');
             let store = await tx.objectStore(store_name);
-            let data = await store.get(key);
+            let index = await store.index(indexname);
+            let data = await index.get(key);
             await tx.done;
             if (data){
                 return data;
@@ -215,7 +222,11 @@ async function getData(store_name,key ) {
 }
 window.getData= getData;
 
-
+/**
+ * clears a data store
+ * @param store_name
+ * @returns {Promise<void>}
+ */
 async function wipeData(store_name) {
     if (!db)
         await initDatabase();
