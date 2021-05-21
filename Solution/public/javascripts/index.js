@@ -85,23 +85,22 @@ function generateRoom() {
     document.getElementById('roomNo').value = 'R' + roomNo;
 }
 
-function selectImage(){
-    let x = document.referrer
-    //console.log(previousPage)
-    console.log("Image clicked")
-    //window.location.href="http://localhost:3000/chats"
-}
+/**
+ * Loads an image if it has been selected from the uploaded images
+ * @param image - path to the image selected in the uploaded images page
+ */
 function loadImage(image){
-    console.log("entered")
+    //checks if an image has been loaded and changes display based on it
     if (image){
-
         document.getElementById('selecting_image').style.display="none"
         document.getElementById('already_selected').style.display="block"
         imageSelected =image
     }
-
-    console.log(image)
 }
+
+/**
+ * Initialises socket
+ */
 function initSocket() {
     // called when someone joins the room. If it is someone else it notifies the joining of the room
     socket.on('joined', function (room, userId) {
@@ -156,12 +155,15 @@ function loginToSplashScreen() {
     document.getElementById('splash_screen').style.display = 'block';
 }
 
+/**
+ * User can connect to a room when the required fields are filled in
+ */
 function connectToRoom() {
     roomNo = document.getElementById('roomNo').value;
     localStorage.setItem('linkedRoom', null);
     name = localStorage.getItem('name');
     let imageUrl;
-    if(document.getElementById('image_url').files[0] == undefined) {
+    if(document.getElementById('image_url').files[0] == undefined && !imageSelected){
         alert("Must choose a file");
     }else{
     if (imageSelected){
@@ -179,6 +181,10 @@ function connectToRoom() {
     hideLoginInterface(roomNo, name);}
 }
 
+/**
+ * Enables a user to move to a linked image
+
+ */
 function moveToLinked() {
     if (localStorage.getItem('linkedRoom') == null || localStorage.getItem('linkedRoom') == "null") {
         localStorage.setItem('linkedRoom', 'R' + Math.round(Math.random() * 10000));
@@ -196,10 +202,8 @@ function linkedChat(){
         alert("Must choose a file");
     }else{
 
-
     let filename =document.getElementById('new_image_url').files[0].name;
     let imageUrl = '/images/'+filename;
-
     try{
         createNewData(imageUrl);
         document.getElementById('linkadd').style.display="none";

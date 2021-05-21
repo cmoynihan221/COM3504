@@ -1,5 +1,5 @@
 /**
- * this file contains the functions to control the drawing on the canvas
+ * this file contains the functions to control the drawing on the canvas with annotations made
  */
 let roomNum;
 let userId;
@@ -7,6 +7,8 @@ let colors = ['red', 'white', 'blue', 'yellow','brown', 'black','pink','gray','i
 let thickness = 4;
 let color, random
 let change;
+const service_url = 'https://kgsearch.googleapis.com/v1/entities:search';
+const apiKey = 'AIzaSyAG7w627q-djB4gTTahssufwNOImRqdYKM';
 /**
  * it init the image canvas to draw on. It sets up the events to respond to (click, mouse on, etc.)
  * it is also the place where the data should be sent  via socket.io
@@ -132,8 +134,6 @@ function initCanvas(sckt, imageUrl, data, offline, roomNumber, user) {
         }, 10);
     });
 }
-const service_url = 'https://kgsearch.googleapis.com/v1/entities:search';
-const apiKey= 'AIzaSyAG7w627q-djB4gTTahssufwNOImRqdYKM';
 
 /**
  * it inits the widget by selecting the type from the field myType
@@ -167,7 +167,6 @@ function selectItem(event){
     document.getElementById('resultPanel').innerHTML+= '<div id="'+row['id']+'"><h1>'+row['name']+'</h1>'+'<p>id:'+row['id']+'</p><p>'+row['rc']+'</p><a href='+row['qc']+'>Link to Webpage</a></div>';
     document.getElementById("searchKG").style.display ="none"
     document.getElementById("typeSet").style.display ="none"
-
     document.getElementById(row['id']).style.border = "solid "+change;
 
 }

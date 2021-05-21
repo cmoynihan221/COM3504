@@ -7,8 +7,8 @@ router.get('/chats', function(req, res, next) {
   res.render('chats', { title: 'Image Browsing' , imagePath:""});
 });
 
-router.get('/chats/:image_path/:folder/:image', function(req, res, next) {
-  let imagepath = "/"+req.params['image_path'] +"/"+req.params['folder'] +"/"+req.params['image']
+router.get('/chats/:image_path/:image', function(req, res, next) {
+  let imagepath = "/"+req.params['image_path'] +"/"+req.params['image']
   res.render('chats', { title: 'Image Browsing' , imagePath: imagepath});
 });
 
