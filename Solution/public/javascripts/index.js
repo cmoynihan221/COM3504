@@ -50,11 +50,11 @@ function checkConnection(){
     }
 
 
-    if ('serviceWorker' in navigator) {
+   /* if ('serviceWorker' in navigator) {
         navigator.serviceWorker
             .register('./service-worker.js')
             .then(function() { console.log('Service Worker Registered'); });
-    }
+    }*/
 
     changeDisplay("offline", "none")
     //window.addEventListener("load", () => {
@@ -64,6 +64,7 @@ function checkConnection(){
             //hasNetwork(true);
             changeDisplay("online", "block")
             changeDisplay("offline", "none")
+            saveImagesInLocal();
         });
         window.addEventListener("offline", () => {
             // Set hasNetwork to offline when they change to offline.
@@ -136,6 +137,7 @@ function sendChatText() {
  */
 let data = null;
 
+
 function logoutOfSplashScreen() {
     localStorage.setItem('name', null);
     document.getElementById('name').value = "";
@@ -162,7 +164,9 @@ function connectToRoom() {
     localStorage.setItem('linkedRoom', null);
     name = localStorage.getItem('name');
     let imageUrl;
-    if(document.getElementById('image_url').files[0] == undefined && !imageSelected){
+
+    if(document.getElementById('image_url').files[0] == undefined && !imageSelected) {
+
         alert("Must choose a file");
     }else{
     if (imageSelected){

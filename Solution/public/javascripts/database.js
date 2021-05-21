@@ -32,7 +32,7 @@ class SpyChat{
         this.canvas = oldData.canvas;
     }
     storeData(){
-        storeDataInCache(this.room_url,this)
+        storeDataInCache(this, SPYCHAT_STORE_NAME)
             .then(t=>console.log("Successfully stored"))
             .catch(e=>console.log("Error saving data:"+e.message))
     }
@@ -59,14 +59,26 @@ class SpyChat{
 }
 window.SpyChat = SpyChat;
 
-
-
+class localImage{
+    constructor(user_id, image_blob) {
+        this.user = user_id;
+        this.user_id_image = user_id + image_blob;
+        this.image = image_blob;
+    }
+    storeData(){
+        storeDataInCache(this, IMAGE_STORE_NAME)
+            .then(t=>console.log("Successfully stored"))
+            .catch(e=>console.log("Error saving data:"+e.message))
+    }
+}
+window.localImage = localImage;
 
 
 
 const SPYCHAT_DB_NAME = 'db_spychat_1';
 const SPYCHAT_STORE_NAME = 'store_spychat';
 const IMAGE_STORE_NAME = 'image_store';
+const IMAGE_TO_UPLOAD = 'upload_store'
 
 /**
  *Creates the database with index on room_url
@@ -88,7 +100,15 @@ async function initDatabase(){
                     let forecastDB = upgradeDb.createObjectStore(IMAGE_STORE_NAME, {
                         autoIncrement: true
                     });
-                    forecastDB.createIndex('user_id', 'user_id');
+                    forecastDB.createIndex('user_id_image', 'user_id_image', {unique: true});
+                }else{
+                    console.log("error on create image store");
+                }
+                if (!upgradeDb.objectStoreNames.contains(IMAGE_TO_UPLOAD)) {
+                    let forecastDB = upgradeDb.createObjectStore(IMAGE_TO_UPLOAD, {
+                        autoIncrement: true
+                    });
+                    forecastDB.createIndex('user_id_image', 'user_id_image', {unique: true});
                 }else{
                     console.log("error on create image store");
                 }
@@ -105,13 +125,12 @@ window.initDatabase = initDatabase;
  * @param spyChat the spy chat object
  * @returns {Promise<void>}
  */
-async function storeDataInCache(room_url,spyChat) {
-    console.log('inserting: '+room_url);
+async function storeDataInCache(data, DB_name) {
     if (!db)
         await initDatabase();
     if (db) {
-        let tx = await db.transaction(SPYCHAT_STORE_NAME, 'readwrite');
-        await tx.store.add(spyChat);
+        let tx = await db.transaction(DB_name, 'readwrite');
+        await tx.store.add(data);
         await  tx.done;
 
     }
@@ -134,37 +153,87 @@ async function updateData(room_url, data) {
         }
     }
 }
-window.storeDataInCache= storeDataInCache;
+window.updateDate= updateData;
 
 /**
  *
  * @param room_url room number + url of photo
  * @returns {Promise<*>} the chat object
  */
-async function getCachedData() {
+async function getCachedData(store_name) {
     if (!db)
         await initDatabase();
     if (db) {
         try {
             //Possibly needs to be edited to make offline
             console.log('fetching data ');
-            let tx = await db.transaction(SPYCHAT_STORE_NAME, 'readonly');
-            let store = await tx.objectStore(SPYCHAT_STORE_NAME);
-            let index = await store.index('room_url');
-            let past_chat = await index.getAll();
+            let tx = await db.transaction(store_name, 'readonly');
+            let store = await tx.objectStore(store_name);
+            let data = await store.getAll();
             await tx.done;
-            if (past_chat){
-                return past_chat;
+            if (data){
+                return data;
             }
             else{
-                //@TODO return some sort of error 'chat not found'
+                throw 'data not found';
             }
         } catch (error) {
-            console.log(error);
+            throw error;
         }
     } else {
-        //@TODO return some sort of error 'no local storage found'
+        throw 'DB failed'
     }
 }
 window.getCachedData= getCachedData;
 
+/**
+ *
+ * @param store_name db store
+ * @param key value to find
+ * @returns {Promise<*>} the chat object
+ */
+async function getData(store_name,key ) {
+    if (!db)
+        await initDatabase();
+    if (db) {
+        try {
+            //Possibly needs to be edited to make offline
+            console.log('fetching data ');
+            let tx = await db.transaction(store_name, 'readonly');
+            let store = await tx.objectStore(store_name);
+            let data = await store.get(key);
+            await tx.done;
+            if (data){
+                return data;
+            }
+            else{
+                throw 'data not found';
+            }
+        } catch (error) {
+            throw error;
+        }
+    } else {
+        throw 'DB failed'
+    }
+}
+window.getData= getData;
+
+
+async function wipeData(store_name) {
+    if (!db)
+        await initDatabase();
+    if (db) {
+        try {
+            //Possibly needs to be edited to make offline
+            console.log('fetching data ');
+            let tx = await db.transaction(store_name, 'readwrite');
+            let store = await tx.objectStore(store_name);
+            let data = await store.clear();
+        } catch (error) {
+            throw error;
+        }
+    } else {
+        throw 'DB failed'
+    }
+}
+window.wipeData= wipeData;

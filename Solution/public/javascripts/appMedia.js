@@ -10,6 +10,10 @@ let mediaCanvas = null;
  * page load function, gets media devices
  */
 function mediaOnLoad(){
+    //window.addEventListener("online", () => {
+     //   saveImagesInLocal();
+    //});
+
     if(hasGetUserMedia()){
         navigator.mediaDevices
             .enumerateDevices()
@@ -17,6 +21,7 @@ function mediaOnLoad(){
     }else {
         alert("This feature is not supported by your browser");
     }
+
 
 }
 
@@ -118,12 +123,38 @@ function snapshot(){
  * Calls save image function
  */
 function save(){
+    let name = localStorage.getItem('name');
+    let image = new localImage(name,mediaCanvas.toDataURL());
+
+    image.storeData();
     //change first parameter to userID once users db is made
-    saveImage(0, mediaCanvas.toDataURL());
-    console.log(mediaCanvas.toDataURL());
+
+    saveImage(name, mediaCanvas.toDataURL());
+
+
     alert("Photo Saved!");
 }
 
+function saveImagesInLocal(){
+    try{
+        getCachedData('upload_store')
+            .then(data => data.forEach(image=>getImage(image)))
+            .catch(e=> console.log(e));
+
+        wipeData('upload_store')
+            .then()
+            .catch(e=>console.log(e));
+
+    }
+    catch(e){
+        console.log(e);
+    }
+}
+window.saveImagesInLocal = saveImagesInLocal;
+function getImage(image){
+    let image_data = getData('image_store',image )
+    saveImage(image_data.user,image_data.image)
+}
 /**
  * Function to send image to sever storage
  * @param userID    Id of the current user
@@ -131,6 +162,7 @@ function save(){
  */
 function saveImage(userID, imageBlob){
     let data = {userId: userID, imageBlob: imageBlob};
+
     $.ajax({
         dataType: "json",
         url: '/save_image',
@@ -143,9 +175,14 @@ function saveImage(userID, imageBlob){
             console.log("SAVED IMAGE!!");
         },
         error: function (err) {
-            alert('Error: ' + err.status + ':' + err.statusText);
+            storeDataInCache(userID+imageBlob,'upload_store')
+                .then(t=>console.log("Successfully stored in upload"))
+                .catch(e=>console.log("Error saving data:"+e.message))
         }
     });
+
+
+
 }
 
 /**
