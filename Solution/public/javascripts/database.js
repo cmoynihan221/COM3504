@@ -108,7 +108,6 @@ async function initDatabase(){
                     let forecastDB = upgradeDb.createObjectStore(IMAGE_TO_UPLOAD, {
                         autoIncrement: true
                     });
-                    forecastDB.createIndex('user_id_image', 'user_id_image', {unique: true});
                 }else{
                     console.log("error on create image store");
                 }
@@ -197,8 +196,6 @@ async function getData(store_name,key ) {
         await initDatabase();
     if (db) {
         try {
-            //Possibly needs to be edited to make offline
-            console.log('fetching data ');
             let tx = await db.transaction(store_name, 'readonly');
             let store = await tx.objectStore(store_name);
             let data = await store.get(key);
@@ -224,8 +221,6 @@ async function wipeData(store_name) {
         await initDatabase();
     if (db) {
         try {
-            //Possibly needs to be edited to make offline
-            console.log('fetching data ');
             let tx = await db.transaction(store_name, 'readwrite');
             let store = await tx.objectStore(store_name);
             let data = await store.clear();

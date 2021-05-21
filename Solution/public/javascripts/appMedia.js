@@ -10,9 +10,9 @@ let mediaCanvas = null;
  * page load function, gets media devices
  */
 function mediaOnLoad(){
-    //window.addEventListener("online", () => {
-     //   saveImagesInLocal();
-    //});
+    window.addEventListener("online", () => {
+        saveImagesInLocal();
+    });
 
     if(hasGetUserMedia()){
         navigator.mediaDevices
@@ -138,7 +138,7 @@ function save(){
 function saveImagesInLocal(){
     try{
         getCachedData('upload_store')
-            .then(data => data.forEach(image=>getImage(image)))
+            .then(data => data.forEach(image=>saveImage(image)))
             .catch(e=> console.log(e));
 
         wipeData('upload_store')
@@ -151,10 +151,7 @@ function saveImagesInLocal(){
     }
 }
 window.saveImagesInLocal = saveImagesInLocal;
-function getImage(image){
-    let image_data = getData('image_store',image )
-    saveImage(image_data.user,image_data.image)
-}
+
 /**
  * Function to send image to sever storage
  * @param userID    Id of the current user
@@ -175,7 +172,7 @@ function saveImage(userID, imageBlob){
             console.log("SAVED IMAGE!!");
         },
         error: function (err) {
-            storeDataInCache(userID+imageBlob,'upload_store')
+            storeDataInCache(data,'upload_store')
                 .then(t=>console.log("Successfully stored in upload"))
                 .catch(e=>console.log("Error saving data:"+e.message))
         }
