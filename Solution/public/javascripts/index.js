@@ -160,13 +160,14 @@ function connectToRoom() {
     roomNo = document.getElementById('roomNo').value;
     localStorage.setItem('linkedRoom', null);
     name = localStorage.getItem('name');
-    //name = document.getElementById('name').value;
-    //let imageUrl= document.getElementById('image_url').value;
     let imageUrl;
-    console.log(imageSelected)
+    if(document.getElementById('image_url').files[0] == undefined) {
+        alert("Must choose a file");
+    }else{
     if (imageSelected){
         imageUrl = imageSelected
     }else{
+
         let filename =document.getElementById('image_url') .files[0].name;
         imageUrl = '/images/'+filename;
     }
@@ -175,7 +176,7 @@ function connectToRoom() {
     data = new SpyChat(imageUrl,roomNo);
     initCanvas(socket, imageUrl, data, false, roomNo, name);
     data.storeData();
-    hideLoginInterface(roomNo, name);
+    hideLoginInterface(roomNo, name);}
 }
 
 function moveToLinked() {
@@ -191,9 +192,14 @@ function moveToLinked() {
 }
 
 function linkedChat(){
-    //Add try catch for this
+    if(document.getElementById('new_image_url').files[0] == undefined) {
+        alert("Must choose a file");
+    }else{
+
+
     let filename =document.getElementById('new_image_url').files[0].name;
     let imageUrl = '/images/'+filename;
+
     try{
         createNewData(imageUrl);
         document.getElementById('linkadd').style.display="none";
@@ -201,6 +207,7 @@ function linkedChat(){
         socket.emit('chat', roomNo, name, "Added linked photo.");
     }catch (e) {
         alert("Cannot use the same file twice!")
+    }
     }
 
 }

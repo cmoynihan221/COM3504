@@ -1,7 +1,7 @@
 import * as idb from './idb/index.js';
 let db;
 
-/*
+/**
 * @param identifier (how to find image offline, imagerURL+roomNo)
 * @param image (image)
 * @param canvas drawings
@@ -15,8 +15,6 @@ class SpyChat{
         else{
             this.newStructure(inputData,roomNo);
         }
-
-
     }
     newStructure(image, roomNo){
         this.room_url =roomNo+image;
@@ -33,7 +31,6 @@ class SpyChat{
         this.linked =  oldData.linked;
         this.canvas = oldData.canvas;
     }
-
     storeData(){
         storeDataInCache(this.room_url,this)
             .then(t=>console.log("Successfully stored"))
@@ -69,7 +66,7 @@ window.SpyChat = SpyChat;
 
 const SPYCHAT_DB_NAME = 'db_spychat_1';
 const SPYCHAT_STORE_NAME = 'store_spychat';
-const IMAGE_STORE = 'image_store';
+const IMAGE_STORE_NAME = 'image_store';
 
 /**
  *Creates the database with index on room_url
@@ -86,6 +83,14 @@ async function initDatabase(){
                     forecastDB.createIndex('room_url', 'room_url', {unique: true});
                 }else{
                     console.log("error on create obj store");
+                }
+                if (!upgradeDb.objectStoreNames.contains(IMAGE_STORE_NAME)) {
+                    let forecastDB = upgradeDb.createObjectStore(IMAGE_STORE_NAME, {
+                        autoIncrement: true
+                    });
+                    forecastDB.createIndex('user_id', 'user_id');
+                }else{
+                    console.log("error on create image store");
                 }
             }
         });

@@ -6,6 +6,9 @@ let video = null;
 let videoSelect;
 let mediaCanvas = null;
 
+/**
+ * page load function, gets media devices
+ */
 function mediaOnLoad(){
     if(hasGetUserMedia()){
         navigator.mediaDevices
@@ -17,6 +20,9 @@ function mediaOnLoad(){
 
 }
 
+/**
+ * initialises the media stream
+ */
 function initMedia() {
     document.getElementById('start').style.display = 'none';
     document.getElementById('change').style.display = 'block';
@@ -24,13 +30,19 @@ function initMedia() {
 
     checkAndSetMedia();
 }
+
+/**
+ * Checks the media stream
+ * @returns {boolean}
+ */
 function hasGetUserMedia() {
     return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
 }
 
 
-
-
+/**
+ * Sets up the webRTC media stream and canvas
+ */
 function checkAndSetMedia(){
     console.log("check and set media") ;
     videoSelect = document.getElementById('videoSource');
@@ -52,26 +64,40 @@ function checkAndSetMedia(){
         navigator.mediaDevices
             .getUserMedia(constraints)
             .then((stream)=>gotStream(stream))
-            .catch(error => handleError())
+            .catch(error => handleError(error))
     } else {
         alert("This feature is not supported by your browser");
     }
 }
+
+/**
+ * Error handle function
+ * @param error
+ */
 function handleError(error) {
     console.log('navigator.MediaDevices.getUserMedia error: ', error.message, error.name);
 }
 
+/**
+ * Function to change media
+ */
 function changeMedia(){
     checkAndSetMedia();
 }
 
+/**
+ * sets up the media stream
+ * @param stream    the media stream
+ */
 function gotStream(stream){
-
     let mediaElement = document.querySelector('video');
     mediaElement.srcObject = stream;
     localMediaStream = stream;
 }
 
+/**
+ * Takes a screenshot of the RTC media
+ */
 function snapshot(){
     video = document.querySelector("video");
     //video = document.get
@@ -88,15 +114,22 @@ function snapshot(){
     }
 
 }
+/**
+ * Calls save image function
+ */
 function save(){
     //change first parameter to userID once users db is made
     saveImage(0, mediaCanvas.toDataURL());
     console.log(mediaCanvas.toDataURL());
-    //changeDisplay('usephoto', 'block');
     alert("Photo Saved!");
 }
+
+/**
+ * Function to send image to sever storage
+ * @param userID    Id of the current user
+ * @param imageBlob     Blob of the image to be saved
+ */
 function saveImage(userID, imageBlob){
-    //console.log()
     let data = {userId: userID, imageBlob: imageBlob};
     $.ajax({
         dataType: "json",
@@ -114,11 +147,20 @@ function saveImage(userID, imageBlob){
         }
     });
 }
+
+/**
+ * Hide and shows relevant obects
+ */
 function retake(){
     changeDisplay('prephoto', 'block');
     changeDisplay('postphoto', 'none');
-    //changeDisplay('usephoto', 'none');
 }
+
+/**
+ * Changes the display value for a class of objects
+ * @param className the class of the object to change
+ * @param style value to change style to
+ */
 function changeDisplay(className, style){
     let items = document.getElementsByClassName(className);
     for (let i =0;i < items.length;i++){
@@ -126,7 +168,10 @@ function changeDisplay(className, style){
     }
 }
 
-
+/**
+ * Evaluates media source information from device and adds relevant information to drop down boxes
+ * @param sourcesInfos camera sources object
+ */
 function getSources(sourcesInfos){
     videoSelect = document.getElementById('videoSource');
     let cameraNames=[];
@@ -144,6 +189,7 @@ function getSources(sourcesInfos){
             cameras.push(sourceInfo.deviceId);
         }
     }
+    // Sets front/back camera for phones/tablets
     if( /Android|webOS|iPhone|iPad|Mac|Macintosh|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
         let option = document.createElement("option");
         option.text = "Back camera";
@@ -155,7 +201,6 @@ function getSources(sourcesInfos){
         videoSelect.appendChild(option2);
 
     }else{
-        alert("not phone");
         for (let i = 0; i!==cameraNames.length;++i){
             const option = document.createElement("option");
             option.text = cameraNames[0];
