@@ -44,11 +44,6 @@ function initCanvas(sckt, imageUrl, data, offline, roomNumber, user) {
     let ctx = cvx.getContext('2d');
     console.log("Canvas created:" + canvas);
     img.src = imageUrl;
-    console.log(imageUrl)
-    console.log("Image src from canvas"+img.src)
-    /*random=Math.floor(Math.random()*(colors.length-1))
-    color = colors[random]
-    console.log(random);*/
     // event on the canvas when the mouse is on it
     canvas.on('mousemove mousedown mouseup mouseout', function (e) {
 
@@ -61,12 +56,13 @@ function initCanvas(sckt, imageUrl, data, offline, roomNumber, user) {
         }
         if (e.type === 'mouseup' || e.type === 'mouseout') {
             if(flag == true){
+                //random color for everytime someone draws on the canvas
                 random=Math.floor(Math.random()*(colors.length-1))
                 color = colors[random]
-                console.log(random);
                 change = ctx.strokeStyle
-                console.log(ctx.strokeStyle)
+
                 data.updateCanvas(cvx.toDataURL());
+                //intialise knowledge graph
                 if (document.getElementById("typeSet") != null) {
                     document.getElementById("typeSet").style.display ="block";
                 }
@@ -119,7 +115,6 @@ function initCanvas(sckt, imageUrl, data, offline, roomNumber, user) {
         }
     });}
 
-    console.log("started")
     // this is called when the src of the image is loaded
     // this is an async operation as it may take time
     img.addEventListener('load', () => {
@@ -168,12 +163,11 @@ function widgetInit(){
  */
 function selectItem(event){
     let row= event.row;
-    console.log(row)
-    //document.getElementById('resultPanel').innerHTML= '<PRE>'+JSON.stringify(row, null, 4)+'</PRE>';
+    //displays new results when a valu is selected from the knowledge graph
     document.getElementById('resultPanel').innerHTML+= '<div id="'+row['id']+'"><h1>'+row['name']+'</h1>'+'<p>id:'+row['id']+'</p><p>'+row['rc']+'</p><a href='+row['qc']+'>Link to Webpage</a></div>';
     document.getElementById("searchKG").style.display ="none"
     document.getElementById("typeSet").style.display ="none"
-    console.log(change)
+
     document.getElementById(row['id']).style.border = "solid "+change;
 
 }
@@ -204,8 +198,6 @@ function reDrawCanvas(img, ctx, cvx, canvas){
  * @param canvas
  * @param ctx
  */
-
-
 function drawImageScaled(img, canvas, ctx) {
     // get the scale
     let scale = Math.min(canvas.width / img.width, canvas.height / img.height);
