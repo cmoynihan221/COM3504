@@ -4,7 +4,7 @@ function initFind(){
     console.log(document.getElementById("image"));
 }
 async function findChats(){
-    getCachedData()
+    getCachedData('store_spychat')
         .then(past_chat => found(past_chat))
 }
 
