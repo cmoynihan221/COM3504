@@ -18,6 +18,9 @@ let cacheName = 'spyChat';
 let filesToCache = [
     '/',
     '/chats',
+    '/searchChats',
+    '/media',
+    '/allImages',
     '/javascripts/idb/index.js',
     '/javascripts/idb/wrap-idb-value.js',
     '/javascripts/app.js',
@@ -72,19 +75,14 @@ self.addEventListener('activate', function (e) {
 /**
  * this is called every time a file is fetched. This is a middleware, i.e. this method is
  * called every time a page is fetched by the browser
- * there are two main branches:
- * /weather_data posts cities names to get data about the weather from the server. if offline, the fetch will fail and the
- *      control will be sent back to Ajax with an error - you will have to recover the situation
- *      from there (e.g. showing the cached data)
- * all the other pages are searched for in the cache. If not found, they are returned
  */
 self.addEventListener('fetch', function (e) {
-    console.log('[Service Worker] Fetch', e.request.url);
         /*
          * The app is asking for app shell files. In this scenario the app uses the
          * "Cache, falling back to the network" offline strategy:
          * https://jakearchibald.com/2014/offline-cookbook/#cache-falling-back-to-network
          */
+
         e.respondWith(
             caches.match(e.request).then(function (response) {
                 return response
