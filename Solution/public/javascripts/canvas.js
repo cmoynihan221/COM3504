@@ -8,12 +8,11 @@ let thickness = 4;
 let color, random
 let change;
 /**
- * it inits the image canvas to draw on. It sets up the events to respond to (click, mouse on, etc.)
+ * it init the image canvas to draw on. It sets up the events to respond to (click, mouse on, etc.)
  * it is also the place where the data should be sent  via socket.io
  * @param sckt the open socket to register events on
  * @param imageUrl the image url to download
  */
-
 function initCanvas(sckt, imageUrl, data, offline, roomNumber, user) {
     if(!offline){
         socket = sckt;
@@ -44,6 +43,7 @@ function initCanvas(sckt, imageUrl, data, offline, roomNumber, user) {
     let ctx = cvx.getContext('2d');
     console.log("Canvas created:" + canvas);
     img.src = imageUrl;
+
     // event on the canvas when the mouse is on it
     canvas.on('mousemove mousedown mouseup mouseout', function (e) {
 
@@ -90,7 +90,7 @@ function initCanvas(sckt, imageUrl, data, offline, roomNumber, user) {
         }
         else{
             img.style.display = 'block';
-            reDrawCanvas(img, ctx, cvx, canvas);
+            redrawCanvas(img, ctx, cvx, canvas);
             data.updateCanvas(cvx.toDataURL());
         }
     });
@@ -109,7 +109,7 @@ function initCanvas(sckt, imageUrl, data, offline, roomNumber, user) {
     socket.on('clear canvas', function (room, userId) {
         if (room == roomNum) {
             img.style.display = 'block';
-            reDrawCanvas(img, ctx, cvx, canvas);
+            redrawCanvas(img, ctx, cvx, canvas);
             data.updateCanvas(cvx.toDataURL());
             writeOnHistory('<b>' + userId + '</b> cleared the canvas. ');
         }
@@ -125,7 +125,7 @@ function initCanvas(sckt, imageUrl, data, offline, roomNumber, user) {
             if (img.naturalHeight) {
                 clearInterval(poll);
                 img.style.display = 'block';
-                reDrawCanvas(img, ctx, cvx, canvas);
+                redrawCanvas(img, ctx, cvx, canvas);
 
                 data.updateCanvas(cvx.toDataURL());
             }
@@ -173,7 +173,7 @@ function selectItem(event){
 }
 
 
-function reDrawCanvas(img, ctx, cvx, canvas){
+function redrawCanvas(img, ctx, cvx, canvas){
     // resize the canvas
     let ratioX=1;
     let ratioY=1;
